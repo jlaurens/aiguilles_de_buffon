@@ -5,16 +5,16 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import { gsap } from 'gsap'
 import { ref, computed, reactive, onMounted, onUnmounted } from 'vue'
-import { useTrialStore } from '@/stores/trial'
-const main_store = useTrialStore()
-import Slide from './components/bricks/Slide.vue'
+import { useTrialStore } from './stores/trial'
 import Trial from './components/Trial.vue'
 import Menu from './components/Menu.vue'
 import Poetry from './components/Poetry.vue'
+import Drop from './components/bricks/Drop.vue'
+const main_store = useTrialStore()
 if (Menu && Poetry) {}
-const panel = ref(null)
+const panel = ref(null as any)
 panel.value = Menu
-var controller
+var controller: AbortController|null
 onMounted(()=>{
   controller = new AbortController();
   document.addEventListener(
@@ -27,8 +27,11 @@ onMounted(()=>{
     { signal: controller.signal }
   );
 })
+const isAbortController = (controller: AbortController|null): controller is AbortController => {
+  return !!controller
+}
 onUnmounted(() => {
-  controller.abort()
+  isAbortController(controller) && controller.abort()
   controller = null
 })
 const resizeListener = () => {
@@ -50,13 +53,13 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', resizeListener)
 })
-const beforeEnter = (el) => {
+const beforeEnter = (el: Element) => {
   gsap.set(el, {
     opacity:0,
     scale:0,
   })
 }
-const enter = (el, done) => {
+const enter = (el: Element, done: any) => {
   gsap.to(el, {
     opacity:1,
     scale:1,
@@ -67,6 +70,7 @@ const enter = (el, done) => {
 </script>
 <template>
   <Trial/>
+  <Drop :z-index='999'/>
   <Transition
     :css='false'
     @before-enter='beforeEnter'

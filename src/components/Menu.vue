@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import Slide from './bricks/Slide.vue'
-import Wave from './bricks/Wave.vue'
 
 defineProps<{ msg: string }>()
 
@@ -10,14 +9,17 @@ onMounted(() => {
   console.log('MOUNTED', ref('menu'), ref('menu').value, ref('menu').value.style)
   //ref('menu').value.style.zIndex = 1000;
 })
+const passEvent = () => {
+  $emit('changeTitle','Awesome ')
+}
+
 </script>
 
 <template>
-<Wave :z-index='999'/>
 <Slide :z-index='1000'>
   <h1>{{ msg }}</h1>
-
   <p>
+     <button type="button" @click='passEvent'> Update me</button>
     Recommended IDE setup:
     <a href="https://code.visualstudio.com/" target="_blank">VS Code</a>
     +

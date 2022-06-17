@@ -9,7 +9,7 @@ import { useTrialStore } from './stores/trial'
 import Trial from './components/Trial.vue'
 import Menu from './components/Menu.vue'
 import Poetry from './components/Poetry.vue'
-import Drop from './components/bricks/Drop.vue'
+import Rain from './components/bricks/Rain.vue'
 const main_store = useTrialStore()
 if (Menu && Poetry) {}
 const panel = ref(null as any)
@@ -70,7 +70,7 @@ const enter = (el: Element, done: any) => {
 </script>
 <template>
   <Trial/>
-  <Drop :z-index='999'/>
+  <Rain :z-index='999'/>
   <Transition
     :css='false'
     @before-enter='beforeEnter'

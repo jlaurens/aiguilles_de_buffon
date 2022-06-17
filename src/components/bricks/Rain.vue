@@ -8,7 +8,7 @@ const props = defineProps({
   },
   count: {
     type: Number,
-    default: 50,
+    default: 10,
   },
 })
 const w = ref(0), h = ref(0)
@@ -82,44 +82,49 @@ class Rain {
     return this
   }
 }
-class Drop {
-  readonly speed = 1 + Math.random()
+class DropBase {
+  protected id: string
+  public speed = 1 + Math.random()
   readonly h = Math.random() * 360
-  opacity_0 = (1 + Math.random()) / 16
+  opacity_0 = (1 + Math.random()) / 32
   ms_0 = Number.MAX_VALUE
   s = 0
   circle: SVGCircleElement
-  gradient: SVGGradientElement
-  stop_0: SVGStopElement
-  stop_1: SVGStopElement
-  constructor() {
-    let id = 'drop'+Math.floor(Math.random()*1000000)
-    let cx = ''+Math.random() * window.innerWidth
-    let cy = ''+Math.random() * window.innerHeight
+  gradient?: SVGGradientElement
+  stop_0?: SVGStopElement
+  stop_1?: SVGStopElement
+  clone = false
+  constructor(
+    public cx = Math.random() * window.innerWidth,
+    public cy = Math.random() * window.innerHeight,
+    id?: string
+  ) {
     let NS = 'http://www.w3.org/2000/svg'
+    if (!id) {
+      id = 'drop' + Math.floor(Math.random() * 1000000)
+      let gradient = document.createElementNS(NS,'radialGradient')
+      gradient.setAttribute('id', id)
+      this.gradient = gradient as SVGGradientElement
+      var stop = document.createElementNS(NS,'stop')
+      stop.setAttribute('offset', '80%')
+      stop.setAttribute('stop-opacity', '0')
+      stop.setAttribute('stop-color','green')
+      gradient.appendChild(stop)
+      this.stop_0 = stop as SVGStopElement
+      stop = document.createElementNS(NS,'stop')
+      stop.setAttribute('offset', '100%')
+      stop.setAttribute('stop-opacity', '1')
+      stop.setAttribute('stop-color','green')
+      gradient.appendChild(stop)
+      this.stop_1 = stop as SVGStopElement
+    }
+    this.id = id
+    console.log('NEW DROPBASE', id, this.id)
     let circle = document.createElementNS(NS, 'circle')
-    circle.setAttribute('cx',cx)
-    circle.setAttribute('cy',cy)
-    circle.setAttribute('fill', 'url(#'+id+')')
-    //circle.setAttribute('fill', 'url(#exampleGradient)')
+    circle.setAttribute('cx', ''+cx)
+    circle.setAttribute('cy', ''+cy)
+    circle.setAttribute('fill', 'url(#'+this.id+')')
     this.circle = circle as SVGCircleElement
-    let gradient = document.createElementNS(NS,'radialGradient')
-    gradient.setAttribute('id', id)
-    // gradient.setAttribute('cx',cx)
-    // gradient.setAttribute('cy',cy)
-    this.gradient = gradient as SVGGradientElement
-    var stop = document.createElementNS(NS,'stop')
-    stop.setAttribute('offset', '80%')
-    stop.setAttribute('stop-opacity', '0')
-    stop.setAttribute('stop-color','green')
-    gradient.appendChild(stop)
-    this.stop_0 = stop as SVGStopElement
-    stop = document.createElementNS(NS,'stop')
-    stop.setAttribute('offset', '100%')
-    stop.setAttribute('stop-opacity', '1')
-    stop.setAttribute('stop-color','green')
-    gradient.appendChild(stop)
-    this.stop_1 = stop as SVGStopElement
   }
   get color() {
     const h = (this.speed*this.s+this.h)%360
@@ -131,7 +136,7 @@ class Drop {
     return Math.max(this.s * this.speed * window.innerHeight/40, 0)
   }
   get opacity () {
-    return this.opacity_0/(1+this.s * this.speed * (this.opacity_0-0.02))
+    return this.opacity_0/(1+this.s * this.speed * (this.opacity_0-0.015))
   }
   fall(ms_0 = Date.now()) {
     this.ms_0 = ms_0
@@ -139,27 +144,82 @@ class Drop {
   }
   mount(container: SVGElement, defs:SVGDefsElement) {
     container.appendChild(this.circle)
-    defs.appendChild(this.gradient)
+    this.gradient && defs.appendChild(this.gradient)
     return this
   }
   unmount() {
     this.circle.remove()
-    this.gradient.remove()
+    this.gradient && this.gradient.remove()
     return this
   }
   update(ms: number): Boolean {
     ms = ms - this.ms_0
     this.s = ms/1000
     const opacity = this.opacity
-    if (opacity < 0.02) {
+    if (opacity < 0.015) {
       return false
     } else {
       this.circle.setAttribute('r',''+this.r)
-      this.stop_0.setAttribute('stop-color',this.color)
-      this.stop_1.setAttribute('stop-color',this.color)
-      this.stop_1.setAttribute('stop-opacity',''+opacity)
+      this.stop_0 && this.stop_0.setAttribute('stop-color',this.color)
+      this.stop_1 && this.stop_1.setAttribute('stop-color',this.color)
+      this.stop_1 && this.stop_1.setAttribute('stop-opacity',''+opacity)
     }
     return true
+  }
+}
+class Drop extends DropBase {
+  private top:  DropBase
+  private left: DropBase
+  private bottom:  DropBase
+  private right: DropBase
+  constructor(
+    public cx = Math.random() * window.innerWidth,
+    public cy = Math.random() * window.innerHeight,
+    id?: string
+  ) {
+    console.log('DROP 1', cx, cy, id)
+    super(cx, cy, id)
+    console.log('DROP 2', cx, cy, id, this.id)
+    this.top  = new DropBase(cx, -cy, this.id)
+    this.left = new DropBase(-cx, cy, this.id)
+    this.bottom = new DropBase(cx, 2 * window.innerHeight-cy, this.id)
+    this.right  = new DropBase(2 * window.innerWidth-cx,  cy, this.id)
+    ;[this.top, this.left, this.bottom, this.right].forEach( (d) => {
+      d.speed = this.speed
+    })
+  }
+  fall(ms_0 = Date.now()) {
+    super.fall(ms_0)
+    this.top.fall(ms_0)
+    this.left.fall(ms_0)
+    this.bottom.fall(ms_0)
+    this.right.fall(ms_0)
+  }
+  mount(container: SVGElement, defs:SVGDefsElement) {
+    super.mount(container, defs)
+    this.top.mount(container, defs)
+    this.left.mount(container, defs)
+    this.bottom.mount(container, defs)
+    this.right.mount(container, defs)
+    return this
+  }
+  unmount() {
+    super.unmount()
+    this.top.unmount()
+    this.left.unmount()
+    this.bottom.unmount()
+    this.right.unmount()
+    return this
+  }
+  update(ms: number): Boolean {
+    if (super.update(ms)) {
+      this.top.update(ms)
+      this.left.update(ms)
+      this.bottom.update(ms)
+      this.right.update(ms)
+      return true
+    }
+    return false
   }
 }
 var rain: Rain

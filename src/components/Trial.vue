@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { useTrialStore } from '@/stores/trial'
-const trial_store = useTrialStore()
-
+import { useTrialStore } from '../stores/trial'
 import Slide from './bricks/Slide.vue'
 import Title from './bricks/Title.vue'
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+
+type Point = [number, number]
+
+const trial_store = useTrialStore()
 
 const resizeListener = () => {
   const width = window.innerWidth;
@@ -22,12 +24,12 @@ const PARQUET_COUNT = 6;
 const PIN_RATIO = 4;
 const PI_expected = 3.1415926535;
 
-const goodColor = ref(0)
+const goodColor = ref('')
 
-const to_digits = (x) => {
+const to_digits = (x: number): number[] => {
   const n = Math.floor(x)
   const d = (Math.floor((x - n)*10**10)+'').split('')
-  return [n, ...d]
+  return [n, ...(d.map(x => parseInt(x, 10)))]
 }
 const PI_ra = to_digits(PI_expected)
 const pin_count = ref(0)
@@ -37,9 +39,9 @@ var front = 0;
 var paquet = -1;
 const canvas_1 = ref('canvas_1')
 const canvas_2 = ref('canvas_2')
-var canvas_ra = [];
-var parquet_width;
-var half_pin_length;
+var canvas_ra: any[] = [];
+var parquet_width: number;
+var half_pin_length: number;
 const resize = () => {
   canvas_ra[0].width  = window.innerWidth;
   canvas_ra[1].width  = window.innerWidth;
@@ -80,29 +82,29 @@ onMounted(() => {
   }, 500);
 })
 const ratio = ref(0)
-var ratio_ra = ref(null)
-var good_ra = []
-watch(ratio_ra, (old_ra, new_ra) => {
-  const ra = []
+var ratio_ra = ref<number[]>([])
+var good_ra: boolean[] = []
+watch(ratio_ra, (old_ra: number[], new_ra: number[]) => {
+  const ra: boolean[] = []
   var torf = true
   new_ra && new_ra.forEach((x, i) => {
     torf = torf && x == PI_ra[i]
-    good_ra.push(torf)
+    ra.push(torf)
   })
   good_ra = ra
 })
-const throw_one_pin = (ctx, w, h) => {
+const throw_one_pin = (ctx: CanvasRenderingContext2D, w: number, h: number) => {
   var ans = false
   var M = [
     Math.random()*w,
     Math.random()*h, // beware the height is not free
   ];
   var theta = Math.PI*Math.random();
-  var P_1 = [
+  var P_1: Point = [
     M[0]+half_pin_length*Math.cos(theta),
     M[1]+half_pin_length*Math.sin(theta),
   ];
-  var P_2 = [
+  var P_2: Point = [
     2 * M[0] - P_1[0],
     2 * M[1] - P_1[1],
   ];
@@ -125,15 +127,13 @@ const throw_one_pin = (ctx, w, h) => {
   ctx.closePath(); 
   return ans
 }
-const throw_pins = (j) => {
-  if (j == null) {
-    j = requested_count
-  }
+const throw_pins = (j?: number) => {
+  var jj = j || requested_count
   var w = getBackCanvas().width;
   var h = getBackCanvas().height;
-  var iterate;
+  var iterate: () => void;
   iterate = () => {
-    if (j>0) {
+    if (jj>0) {
       if (pin_paquet<0) {
         return
       }
@@ -143,7 +143,7 @@ const throw_pins = (j) => {
       ctx.save()
       ctx.globalAlpha = 0.9925**(1+pin_paquet);
       ctx.drawImage(getBackCanvas(), 0, 0);
-      --j;
+      --jj;
       ctx.globalAlpha = 1;
       ctx.lineWidth = 4;
       ctx.lineCap = "round";
@@ -158,21 +158,21 @@ const throw_pins = (j) => {
       if (ratio.value < 10) {
         ratio_ra.value = to_digits(ratio.value)
       } else {
-        ratio_ra.value = null
+        ratio_ra.value = []
       }
       setTimeout(iterate, 1000 / 60 / 1.01 ** pin_count.value);
     }
   };
   iterate();
 }
-const crossing = (P_1, P_2) => {
+const crossing = (P_1: Point, P_2: Point) => {
   return Math.floor(P_1[1]/parquet_width) != Math.floor(P_2[1]/parquet_width)
 }
 const toggleRun = () => {
   pin_paquet = -pin_paquet-1;
   if (pin_paquet>=0) {
     throw_pins(requested_count);
-    requested_count = Math.floor(pin_count/4)  
+    requested_count = Math.floor(pin_count.value/4)  
   }
 }
 const accelerate = () => {
@@ -189,20 +189,20 @@ const decelerate = () => {
     ++pin_paquet;
   }
 }
-const expectedStyle = computed(() => {
+const expectedStyle = computed((): string => {
   return 'opacity:0'+(ratio.value && ratio.value < 10? '.166666;': ';')
 })
 const ratioStyle = computed(() => {
   let ra = ratio_ra.value
   return 'opacity:'+(ra && ra[0] && ra[0] < 10? '1;': '0;')
 })
-const digitStyle = (i) => {
+const digitStyle = (i: number): string => {
   var ans = good_ra[i]
     ? 'color:'+ goodColor.value + ';'
     : ''
   return ans
 }
-const ratioDigit = (i) => {
+const ratioDigit = (i: number): string => {
   let ra = ratio_ra.value
   var ans = ra && ra[i] != undefined ? ''+ra[i] : '0'
   return ans

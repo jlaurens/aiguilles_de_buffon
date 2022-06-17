@@ -6,7 +6,6 @@ defineProps<{ msg: string }>()
 
 const count = ref(0)
 onMounted(() => {
-  console.log('MOUNTED', ref('menu'), ref('menu').value, ref('menu').value.style)
   //ref('menu').value.style.zIndex = 1000;
 })
 const passEvent = () => {

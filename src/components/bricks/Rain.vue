@@ -8,14 +8,14 @@ const props = defineProps({
   },
   count: {
     type: Number,
-    default: 10,
+    default: 20,
   },
 })
 const w = ref(0), h = ref(0)
 const svgRoot = ref<SVGElement>()
 const svgDefs = ref<SVGDefsElement>()
 class Rain {
-  paused = false
+  paused__ = false
   readonly drops: Drop[] = []
   constructor(
     private root: SVGElement,
@@ -23,17 +23,27 @@ class Rain {
     private count = props.count
   ) {
   }
+  get paused () {
+    return this.paused__
+  }
+  set paused (yorn) {
+    if (!(this.paused__ = yorn)) {
+      setTimeout(() => { this.update() }, 50)
+    }
+  }
   newDrop(): Drop {
     let d = new Drop()
     this.drops.push(d)
     return d.mount(this.root, this.defs)
   }
-  dryDrop(d: Drop): Drop | undefined {
-    const i = this.drops.indexOf(d)
-    if (i>=0) {
-      this.drops.splice(i, 1)
-      d.unmount()
-      return d
+  dryDrop(d: Drop) {
+    if (d) {
+      d.shouldUnmount(() => {
+        const i = this.drops.indexOf(d)
+        if (i>=0) {
+          this.drops.splice(i, 1)
+        }
+      })
     }
   }
   forEachDrop (f: (d: Drop) => void) {
@@ -68,32 +78,45 @@ class Rain {
     return this
   }
   update(): Rain {
-    this.forEachDrop( (d) => {
-      if (!d.update(Date.now())) {
-        this.dryDrop(d)
-        setTimeout( () => {
-          this.newDrop().fall()
-        }, 1000*(1+2*Math.random())/3)
-      }
-    } )
     if (!this.paused) {
+      this.forEachDrop( (d) => {
+        if (!d.update(Date.now())) {
+          setTimeout( () => {
+            this.dryDrop(d)
+          }, 1000*(1+2*Math.random()))
+          if (!d.willUnmount) {
+            d.willUnmount = true
+            setTimeout( () => {
+              this.newDrop().fall()
+            }, 1000*(1+2*Math.random())/3)
+          }
+        }
+      } )
       setTimeout(() => { this.update() }, 50)
     }
     return this
   }
 }
 class DropBase {
+  static OPACITY_LIMIT = 0.015
+  static OPACITY_FACTOR = 0.8
+  static OPACITY_O7_MIN = 0.25
+  static OPACITY_O7_MAX = 0.95
+  static OPACITY_O7_FACTOR = 2
+  static OPACITY_O7_A = 1 - DropBase.OPACITY_O7_MIN
+  static OPACITY_O7_B = Math.pow(DropBase.OPACITY_O7_A/(1-DropBase.OPACITY_O7_MAX),1/DropBase.OPACITY_O7_FACTOR)-1
   protected id: string
-  public speed = 1 + Math.random()
+  public speed = 1 + 2 * Math.random()
   readonly h = Math.random() * 360
-  opacity_0 = (1 + Math.random()) / 32
+  opacity_0 = (2 + Math.random()) / 32
   ms_0 = Number.MAX_VALUE
   s = 0
   circle: SVGCircleElement
   gradient?: SVGGradientElement
   stop_0?: SVGStopElement
   stop_1?: SVGStopElement
-  clone = false
+  willUnmount?: Boolean
+  s_max = 15 + 6 * Math.random()
   constructor(
     public cx = Math.random() * window.innerWidth,
     public cy = Math.random() * window.innerHeight,
@@ -106,7 +129,7 @@ class DropBase {
       gradient.setAttribute('id', id)
       this.gradient = gradient as SVGGradientElement
       var stop = document.createElementNS(NS,'stop')
-      stop.setAttribute('offset', '80%')
+      stop.setAttribute('offset', ''+DropBase.OPACITY_O7_MIN)
       stop.setAttribute('stop-opacity', '0')
       stop.setAttribute('stop-color','green')
       gradient.appendChild(stop)
@@ -119,7 +142,6 @@ class DropBase {
       this.stop_1 = stop as SVGStopElement
     }
     this.id = id
-    console.log('NEW DROPBASE', id, this.id)
     let circle = document.createElementNS(NS, 'circle')
     circle.setAttribute('cx', ''+cx)
     circle.setAttribute('cy', ''+cy)
@@ -127,24 +149,27 @@ class DropBase {
     this.circle = circle as SVGCircleElement
   }
   get color() {
-    const h = (this.speed*this.s+this.h)%360
+    const h = (this.speed*this.s/this.s_max*360+this.h)%360
     return 'hsl('
       + (isNaN(h)?'0':h)
       +',66%,50%)'
   }
   get r () {
-    return Math.max(this.s * this.speed * window.innerHeight/40, 0)
+    return Math.max(this.s * this.speed / this.s_max * window.innerHeight / 2, 0)
   }
   get opacity () {
-    return this.opacity_0/(1+this.s * this.speed * (this.opacity_0-0.015))
+    let f = this.s>this.s_max ? Math.pow(0.5,this.s-this.s_max) : 1
+    let a = Math.pow(this.opacity_0/DropBase.OPACITY_LIMIT, DropBase.OPACITY_FACTOR) - 1
+    return f * this.opacity_0
+      /Math.pow(1+a*this.s / this.s_max, 1/DropBase.OPACITY_FACTOR)
   }
-  fall(ms_0 = Date.now()) {
-    this.ms_0 = ms_0
-    this.update(ms_0)
+  get offset () {
+    return 1-DropBase.OPACITY_O7_A/Math.pow(1+DropBase.OPACITY_O7_B*this.s/this.s_max, DropBase.OPACITY_O7_FACTOR)
   }
   mount(container: SVGElement, defs:SVGDefsElement) {
     container.appendChild(this.circle)
     this.gradient && defs.appendChild(this.gradient)
+    this.willUnmount = false
     return this
   }
   unmount() {
@@ -152,71 +177,83 @@ class DropBase {
     this.gradient && this.gradient.remove()
     return this
   }
+  shouldUnmount(f?: ()=>void) {
+    this.unmount()
+    f && f()
+    return this
+  }
+  fall(ms_0 = Date.now()) {
+    this.ms_0 = ms_0
+    this.update(ms_0)
+  }
   update(ms: number): Boolean {
     ms = ms - this.ms_0
     this.s = ms/1000
-    const opacity = this.opacity
-    if (opacity < 0.015) {
-      return false
-    } else {
-      this.circle.setAttribute('r',''+this.r)
-      this.stop_0 && this.stop_0.setAttribute('stop-color',this.color)
-      this.stop_1 && this.stop_1.setAttribute('stop-color',this.color)
-      this.stop_1 && this.stop_1.setAttribute('stop-opacity',''+opacity)
-    }
-    return true
+    const color = this.color
+    this.circle.setAttribute('r',''+this.r)
+    this.stop_0 && this.stop_0.setAttribute('stop-color',color)
+    this.stop_0 && this.stop_0.setAttribute('offset',''+this.offset)
+    this.stop_1 && this.stop_1.setAttribute('stop-color',color)
+    this.stop_1 && this.stop_1.setAttribute('stop-opacity',''+this.opacity)
+    return this.s < this.s_max
   }
 }
 class Drop extends DropBase {
-  private top:  DropBase
-  private left: DropBase
-  private bottom:  DropBase
-  private right: DropBase
+  private all__: DropBase[]
   constructor(
     public cx = Math.random() * window.innerWidth,
     public cy = Math.random() * window.innerHeight,
     id?: string
   ) {
-    console.log('DROP 1', cx, cy, id)
     super(cx, cy, id)
-    console.log('DROP 2', cx, cy, id, this.id)
-    this.top  = new DropBase(cx, -cy, this.id)
-    this.left = new DropBase(-cx, cy, this.id)
-    this.bottom = new DropBase(cx, 2 * window.innerHeight-cy, this.id)
-    this.right  = new DropBase(2 * window.innerWidth-cx,  cy, this.id)
-    ;[this.top, this.left, this.bottom, this.right].forEach( (d) => {
+    this.all__ = [
+      new DropBase(cx, -cy, this.id),
+      new DropBase(-cx, cy, this.id),
+      new DropBase(cx, 2 * window.innerHeight-cy, this.id),
+      new DropBase(2 * window.innerWidth-cx,  cy, this.id)
+    ]
+    this.all__.forEach( (d) => {
       d.speed = this.speed
+      d.s_max = this.s_max
     })
   }
-  fall(ms_0 = Date.now()) {
-    super.fall(ms_0)
-    this.top.fall(ms_0)
-    this.left.fall(ms_0)
-    this.bottom.fall(ms_0)
-    this.right.fall(ms_0)
-  }
   mount(container: SVGElement, defs:SVGDefsElement) {
+    this.unmount()
     super.mount(container, defs)
-    this.top.mount(container, defs)
-    this.left.mount(container, defs)
-    this.bottom.mount(container, defs)
-    this.right.mount(container, defs)
+    this.all__.forEach( (d) => { d.mount(container, defs) })
     return this
   }
   unmount() {
     super.unmount()
-    this.top.unmount()
-    this.left.unmount()
-    this.bottom.unmount()
-    this.right.unmount()
+    this.all__.forEach( (d) => { d.unmount() })
     return this
+  }
+  shouldUnmount(f?: ()=>void) {
+    let unmount = () => {
+      if (this.all__.length) {
+        let i = Math.floor(Math.random() * this.all__.length)
+        let d = this.all__[i]
+        d.shouldUnmount(() => {
+          let i = this.all__.indexOf(d)
+          if (i>=0) {
+            this.all__.splice(i, 1)
+          }
+        })
+        setTimeout(unmount, 500 * Math.random())
+      } else {
+        super.shouldUnmount(f)
+      }
+    }
+    setTimeout(unmount, 1000 * (1+Math.random()))
+    return this
+  }
+  fall(ms_0 = Date.now()) {
+    super.fall(ms_0)
+    this.all__.forEach( (d) => { d.fall(ms_0) })
   }
   update(ms: number): Boolean {
     if (super.update(ms)) {
-      this.top.update(ms)
-      this.left.update(ms)
-      this.bottom.update(ms)
-      this.right.update(ms)
+      this.all__.forEach( (d) => { d.update(ms) })
       return true
     }
     return false

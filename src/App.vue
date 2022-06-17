@@ -7,6 +7,7 @@ import { gsap } from 'gsap'
 import { ref, computed, reactive, onMounted, onUnmounted } from 'vue'
 import { useTrialStore } from './stores/trial'
 import Trial from './components/Trial.vue'
+import Toolbar from './components/Toolbar.vue'
 import Menu from './components/Menu.vue'
 import Poetry from './components/Poetry.vue'
 import Rain from './components/bricks/Rain.vue'
@@ -79,6 +80,7 @@ const enter = (el: Element, done: any) => {
     <!--component :if="panel" :is="panel" /-->
     <Menu msg='FOO'></Menu>
   </Transition>
+  <Toolbar />
 </template>
 
 <style lang="scss">

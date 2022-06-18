@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 const props = defineProps({
   image: String,
 })
@@ -20,8 +19,8 @@ let path = (image?: string): string => {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  width:  64px;
-  height: 48px;
+  width:  96px;
+  height: 96px;
   padding: 0px 10px;
 }
 .icon>img {

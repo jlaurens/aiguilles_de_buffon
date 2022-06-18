@@ -86,6 +86,8 @@ const clicked = (what: string) => {
       qrIsOn.value = true
       qrImage.value = 'QRCode-IMB.png'
       break
+    default:
+      qrIsOn.value = false
   }
   console.log('CLICKED', qrImage)
 }
@@ -97,7 +99,7 @@ const dismissQR = () => {
   <Trial/>
   <Rain :z-index='999'/>
   <Transition
-    name='qrcode'
+    name='fade'
     v-if="qrIsOn"
   >
     <QR :bg-name='qrImage' bg-size="contain" @click="dismissQR()">
@@ -111,7 +113,7 @@ const dismissQR = () => {
     v-else
   >
     <!--component :if="panel" :is="panel" /-->
-    <Menu msg='FOO'></Menu>
+    <Menu></Menu>
   </Transition>
   <Toolbar @clicked="(n) => clicked(n)"/>
 </template>
@@ -158,15 +160,12 @@ body {
   color: #594471;
   background-color:white;
 }
-.qrcode-enter-active {
-  transition: all 1s ease-out;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 2s ease;
 }
-.qrcode-leave-active {
-  transition: all 1s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.qrcode-enter-from,
-.qrcode-leave-to {
-  transform: translateX(50%);
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 .qrcode-help {

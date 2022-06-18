@@ -2,48 +2,50 @@
 import { ref, onMounted } from 'vue'
 import Slide from './bricks/Slide.vue'
 
-defineProps<{ msg: string }>()
-
+const show = ref(true)
 const count = ref(0)
 onMounted(() => {
   //ref('menu').value.style.zIndex = 1000;
 })
-const passEvent = () => {
-  $emit('changeTitle','Awesome ')
-}
 </script>
 
 <template>
 <Slide :z-index='1000'>
-  <h1>{{ msg }}</h1>
-  <p>
-     <button type="button" @click='passEvent'> Update me</button>
-    Recommended IDE setup:
-    <a href="https://code.visualstudio.com/" target="_blank">VS Code</a>
-    +
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>
-  </p>
-  <p>See <code>README.md</code> for more information.</p>
+  <div class="menu">
+    <h1 class="menu">Les aiguilles de Buffon</h1>
+    <ul class="menu">
+      <li>π</li>
+    </ul>
+    <button @click="show = !show">Toggle</button>
+    <Transition name="fade" >
+      <p v-if="show">hello</p>
+    </Transition>
+  </div>
 </Slide>
 </template>
 
 <style scoped>
-.menu {
-  z-index: 1000;
+h1.menu {
+  margin-block-start:0.2em;
+  margin-block-end:0.4em;
 }
-a {
-  color: #42b983;
+ul.menu {
+  font-size: 1.5em;
+  margin-block-start:0.1em;
+  margin-block-end:0.1em;
+  padding-inline-start: 4em;
+  text-align: left;
 }
-
-label {
-  margin: 0 0.5em;
-  font-weight: bold;
+li.menu {
+  padding-left:10px;
+  padding-right:10px;
 }
-
-code {
-  background-color: #eee;
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: #304455;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

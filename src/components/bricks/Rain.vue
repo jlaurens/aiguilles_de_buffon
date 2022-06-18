@@ -99,16 +99,17 @@ class Rain {
 }
 class DropBase {
   static OPACITY_LIMIT = 0.015
-  static OPACITY_FACTOR = 0.8
+  static OPACITY_FACTOR = 0.7
   static OPACITY_O7_MIN = 0.25
   static OPACITY_O7_MAX = 0.95
   static OPACITY_O7_FACTOR = 2
   static OPACITY_O7_A = 1 - DropBase.OPACITY_O7_MIN
   static OPACITY_O7_B = Math.pow(DropBase.OPACITY_O7_A/(1-DropBase.OPACITY_O7_MAX),1/DropBase.OPACITY_O7_FACTOR)-1
   protected id: string
-  public speed = (1 + 2 * Math.random())/3
+  public r_speed = (1 + 5 * Math.random())/3
+  public h_speed = (2*Math.floor(2 * Math.random())-1)*(1 + 5 * Math.random())/3
   readonly h = Math.random() * 360
-  opacity_0 = (2 + Math.random()) / 32
+  opacity_0 = (2 + Math.random()) / 16
   ms_0 = Number.MAX_VALUE
   s = 0
   circle: SVGCircleElement
@@ -116,7 +117,7 @@ class DropBase {
   stop_0?: SVGStopElement
   stop_1?: SVGStopElement
   willUnmount?: Boolean
-  s_max = 15 + 6 * Math.random()
+  s_max = 30 + 15 * Math.random()
   constructor(
     public cx = Math.random() * window.innerWidth,
     public cy = Math.random() * window.innerHeight,
@@ -149,13 +150,13 @@ class DropBase {
     this.circle = circle as SVGCircleElement
   }
   get color() {
-    const h = (this.speed*this.s/this.s_max*360+this.h)%360
+    const h = (this.h_speed*this.s/this.s_max*360+this.h)%360
     return 'hsl('
       + (isNaN(h)?'0':h)
       +',66%,50%)'
   }
   get r () {
-    return Math.max(this.s * this.speed / this.s_max * window.innerHeight / 2, 0)
+    return Math.max(this.s * this.r_speed / this.s_max * window.innerHeight / 2, 0)
   }
   get opacity () {
     let f = this.s>this.s_max ? Math.pow(0.5,this.s-this.s_max) : 1
@@ -213,7 +214,8 @@ class Drop extends DropBase {
       new DropBase(2 * window.innerWidth-cx,  cy, this.id)
     ]
     this.all__.forEach( (d) => {
-      d.speed = this.speed
+      d.r_speed = this.r_speed
+      d.h_speed = this.h_speed
       d.s_max = this.s_max
     })
   }

@@ -11,6 +11,7 @@ import Toolbar from './components/Toolbar.vue'
 import Menu from './components/Menu.vue'
 import Poetry from './components/Poetry.vue'
 import Rain from './components/bricks/Rain.vue'
+import QR from './components/bricks/QR.vue'
 const main_store = useTrialStore()
 if (Menu && Poetry) {}
 const panel = ref(null as any)
@@ -68,19 +69,51 @@ const enter = (el: Element, done: any) => {
     onComplete: done,
   })
 }
+const qrIsOn = ref(false)
+var qrImage = ref('None')
+const clicked = (what: string) => {
+  console.log('CLICKED', what)
+  switch (what) {
+    case 'CNRS':
+      qrIsOn.value = true
+      qrImage.value = 'QRCode-CNRS.png'
+      break
+    case 'uB':
+      qrIsOn.value = true
+      qrImage.value = 'QRCode-uB.png'
+      break
+    case 'IMB':
+      qrIsOn.value = true
+      qrImage.value = 'QRCode-IMB.png'
+      break
+  }
+  console.log('CLICKED', qrImage)
+}
+const dismissQR = () => {
+  qrIsOn.value = false
+}
 </script>
 <template>
   <Trial/>
   <Rain :z-index='999'/>
   <Transition
+    name='qrcode'
+    v-if="qrIsOn"
+  >
+    <QR :bg-name='qrImage' bg-size="contain" @click="dismissQR()">
+    <div class="qrcode-help">Cliquer l'image pour fermer</div>
+    </QR>
+  </Transition>
+  <Transition
     :css='false'
     @before-enter='beforeEnter'
     @enter='enter'
+    v-else
   >
     <!--component :if="panel" :is="panel" /-->
     <Menu msg='FOO'></Menu>
   </Transition>
-  <Toolbar />
+  <Toolbar @clicked="(n) => clicked(n)"/>
 </template>
 
 <style lang="scss">
@@ -124,5 +157,20 @@ body {
   font-size:40px;
   color: #594471;
   background-color:white;
+}
+.qrcode-enter-active {
+  transition: all 1s ease-out;
+}
+.qrcode-leave-active {
+  transition: all 1s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.qrcode-enter-from,
+.qrcode-leave-to {
+  transform: translateX(50%);
+  opacity: 0;
+}
+.qrcode-help {
+  position: relative;
+  color: rgba(0,0,0,0.1);
 }
 </style>

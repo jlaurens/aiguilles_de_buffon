@@ -20,9 +20,11 @@ let path = (image?: string): string => {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  width:  64px;
-  height: 48px;
-  padding: 0px 10px;
+  position: absolute;
+  left: 25%;
+  top:  25%;
+  width:  50%;
+  height: 50%;
 }
 .icon>img {
   width: 100%;

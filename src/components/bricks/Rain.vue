@@ -106,7 +106,7 @@ class DropBase {
   static OPACITY_O7_A = 1 - DropBase.OPACITY_O7_MIN
   static OPACITY_O7_B = Math.pow(DropBase.OPACITY_O7_A/(1-DropBase.OPACITY_O7_MAX),1/DropBase.OPACITY_O7_FACTOR)-1
   protected id: string
-  public speed = 1 + 2 * Math.random()
+  public speed = (1 + 2 * Math.random())/3
   readonly h = Math.random() * 360
   opacity_0 = (2 + Math.random()) / 32
   ms_0 = Number.MAX_VALUE

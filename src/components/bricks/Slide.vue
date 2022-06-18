@@ -6,12 +6,18 @@ const props = defineProps({
     default: 0,
   },
   bgName: String,
+  bgSize: {
+    type: String,
+    default: 'cover',
+  }
 })
 const style = computed(() => {
   return props.bgName
     ? {
       background: 'url(/src/assets/'+props.bgName+')',
-      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundSize: props.bgSize,
+      backgroundRepeat: 'no-repeat',
       zIndex: props.zIndex,
     } : {
       zIndex: props.zIndex,

@@ -17,11 +17,13 @@ const svgDefs = ref<SVGDefsElement>()
 class Rain {
   paused__ = false
   readonly drops: Drop[] = []
+  readonly count0: number
   constructor(
     private root: SVGElement,
     private defs: SVGDefsElement,
     private count = props.count
   ) {
+    this.count0 = count
   }
   get paused () {
     return this.paused__
@@ -31,10 +33,12 @@ class Rain {
       setTimeout(() => { this.update() }, 50)
     }
   }
-  newDrop(): Drop {
-    let d = new Drop()
-    this.drops.push(d)
-    return d.mount(this.root, this.defs)
+  newDrop(): Drop|undefined {
+    if (this.drops.length < this.count0) {
+      let d = new Drop()
+      this.drops.push(d)
+      return d.mount(this.root, this.defs)
+    }
   }
   dryDrop(d: Drop) {
     if (d) {
@@ -46,29 +50,29 @@ class Rain {
       })
     }
   }
-  forEachDrop (f: (d: Drop) => void) {
-    this.drops.forEach( (d) => { f(d) } )
-  }
   mount(): Rain {
-    this.forEachDrop( (d) => { d.mount(this.root, this.defs) } )
+    for (let d of this.drops) { d.mount(this.root, this.defs) }
     return this
   }
   unmount(): Rain {
-    this.forEachDrop( (d) => { d.unmount() } )
+    for (let d of this.drops) { d.unmount() }
     return this
   }
   dry(): Rain {
-    this.forEachDrop( (d) => { this.dryDrop(d) } )
+    for (let d of this.drops) { this.dryDrop(d) }
     return this
   }
   fall(): Rain {
     this.dry()
     const fall = (n: number) => {
-      this.newDrop().fall()
-      if (n > 1) {
-        setTimeout(() => {
-          fall(n-1)
-        }, 1000*(1+2*Math.random())/3);
+      const d = this.newDrop()
+      if (d) {
+        d.fall()
+        if (n > 1) {
+          setTimeout(() => {
+            fall(n-1)
+          }, 1000*(1+2*Math.random())/3);
+        }
       }
     }
     fall(this.count)
@@ -79,7 +83,7 @@ class Rain {
   }
   update(): Rain {
     if (!this.paused) {
-      this.forEachDrop( (d) => {
+      for (let d of this.drops) {
         if (!d.update(Date.now())) {
           setTimeout( () => {
             this.dryDrop(d)
@@ -87,11 +91,12 @@ class Rain {
           if (!d.willUnmount) {
             d.willUnmount = true
             setTimeout( () => {
-              this.newDrop().fall()
+              const d = this.newDrop()
+              d && d.fall()
             }, 1000*(1+2*Math.random())/3)
           }
         }
-      } )
+      }
       setTimeout(() => { this.update() }, 50)
     }
     return this
@@ -273,15 +278,14 @@ onMounted(() => {
     svgDefs.value as SVGDefsElement
   ).mount()
   resizeListener()
-  window.addEventListener('resize', resizeListener)
 })
 onUnmounted(() => {
-  window.removeEventListener('resize', resizeListener)
   rain && rain.unmount()
 })
 const viewBox = computed(() => {
   return "0 0 "+w.value+" "+h.value
 })
+defineExpose({ resizeListener })
 </script>
 
 <template>
@@ -304,7 +308,9 @@ const viewBox = computed(() => {
   display: block;
   position: absolute;
   width: 100%;
-  padding-bottom: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
   overflow: hidden;
 }
 .svg-content {

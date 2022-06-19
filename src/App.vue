@@ -4,7 +4,7 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import { gsap } from 'gsap'
-import { ref, computed, reactive, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useTrialStore } from './stores/trial'
 import Trial from './components/Trial.vue'
 import Toolbar from './components/Toolbar.vue'
@@ -36,10 +36,12 @@ onUnmounted(() => {
   isAbortController(controller) && controller.abort()
   controller = null
 })
+const rain = ref()
+const poetry = ref()
 const resizeListener = () => {
   var body = document.body
-  var style = window.getComputedStyle(body, null).getPropertyValue('font-size');
-  var fontSize = parseFloat(style); 
+  var style = window.getComputedStyle(body, null)
+  var fontSize = parseFloat(style.getPropertyValue('font-size'))
   const width = window.innerWidth;
   const height = window.innerHeight;
   console.log("width, height", width, height, fontSize)
@@ -48,6 +50,8 @@ const resizeListener = () => {
   || 1.1 * newFontSize <= fontSize ) {
     body.style.fontSize = newFontSize+'px'
   }
+  poetry.value && poetry.value.resizeListener()
+  rain.value && rain.value.resizeListener()
 }
 onMounted(() => {
   window.addEventListener('resize', resizeListener)
@@ -69,6 +73,21 @@ const enter = (el: Element, done: any) => {
     onComplete: done,
   })
 }
+const menuIsOn = ref(true)
+const page = ref('NONE')
+const menuSelect = (n: string) => {
+  menuIsOn.value = false
+  console.log('SELECT', n)
+  switch (n) {
+    case 'Pi':
+      page.value = 'Poetry'
+      break
+    default:
+      menuIsOn.value = true
+      console.log('SELECT', n)
+  }
+}
+
 const qrIsOn = ref(false)
 var qrImage = ref('None')
 const clicked = (what: string) => {
@@ -89,15 +108,18 @@ const clicked = (what: string) => {
     default:
       qrIsOn.value = false
   }
-  console.log('CLICKED', qrImage)
 }
 const dismissQR = () => {
   qrIsOn.value = false
 }
+const isPage = (s: string): boolean => {
+  console.log('IS_PAGE', s, page.value)
+  return page.value == s
+}
 </script>
 <template>
   <Trial/>
-  <Rain :z-index='999'/>
+  <Rain ref='rain' :z-index='999'/>
   <Transition
     name='fade'
     v-if="qrIsOn"
@@ -110,10 +132,16 @@ const dismissQR = () => {
     :css='false'
     @before-enter='beforeEnter'
     @enter='enter'
-    v-else
+    v-else-if="menuIsOn"
   >
     <!--component :if="panel" :is="panel" /-->
-    <Menu></Menu>
+    <Menu @on-selected="menuSelect"></Menu>
+  </Transition>
+  <Transition
+    name='fade'
+    v-else-if="isPage('Poetry')"
+  >
+    <Poetry ref="poetry"></Poetry>
   </Transition>
   <Toolbar @clicked="(n) => clicked(n)"/>
 </template>

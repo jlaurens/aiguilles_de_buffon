@@ -3,10 +3,12 @@ import { ref, onMounted } from 'vue'
 import Slide from './bricks/Slide.vue'
 
 const show = ref(true)
-const count = ref(0)
 onMounted(() => {
   //ref('menu').value.style.zIndex = 1000;
 })
+defineEmits([
+  'onSelected'
+])
 </script>
 
 <template>
@@ -14,7 +16,7 @@ onMounted(() => {
   <div class="menu">
     <h1 class="menu">Les aiguilles de Buffon</h1>
     <ul class="menu">
-      <li>π</li>
+      <li class="menu" @click="$emit('onSelected','Pi')">π</li>
     </ul>
     <button @click="show = !show">Toggle</button>
     <Transition name="fade" >
@@ -26,6 +28,7 @@ onMounted(() => {
 
 <style scoped>
 h1.menu {
+  font-size: 125%;
   margin-block-start:0.2em;
   margin-block-end:0.4em;
 }
@@ -37,6 +40,7 @@ ul.menu {
   text-align: left;
 }
 li.menu {
+  cursor: pointer;
   padding-left:10px;
   padding-right:10px;
 }

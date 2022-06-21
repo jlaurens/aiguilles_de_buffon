@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import Icon from '@/components/bricks/Icon.vue'
+import Icon from './bricks/Icon.vue'
 defineEmits(['clicked'])
 </script>
 

@@ -222,6 +222,7 @@ class Drop extends DropBase {
       d.r_speed = this.r_speed
       d.h_speed = this.h_speed
       d.s_max = this.s_max
+      d.circle.style.opacity = "0.75"
     })
   }
   mount(container: SVGElement, defs:SVGDefsElement) {

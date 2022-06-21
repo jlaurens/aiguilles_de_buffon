@@ -4,18 +4,82 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import { gsap } from 'gsap'
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useTrialStore } from './stores/trial'
 import Trial from './components/Trial.vue'
 import Toolbar from './components/Toolbar.vue'
 import Menu from './components/Menu.vue'
-import Poetry from './components/Poetry.vue'
+import Pi from './components/Pi.vue'
+import Game from './components/Game.vue'
 import Rain from './components/bricks/Rain.vue'
 import QR from './components/bricks/QR.vue'
-const main_store = useTrialStore()
-if (Menu && Poetry) {}
+import Barbier1 from './components/Barbier1.vue'
+const rain = ref()
+const rainIsOn = ref(true)
+const pi = ref()
+const game = ref()
+const trial = ref()
+const barbier1 = ref()
 const panel = ref(null as any)
 panel.value = Menu
+const menuIsOn = ref(true)
+const page = ref('NONE')
+const qrIsOn = ref(false)
+const switchPage = (name: string) => {
+  const qr = (name: string) => {
+    const png = name
+    if (qrImage.value == png) {
+      qrImage.value = 'NONE'
+      qrIsOn.value = false
+    } else {
+      qrImage.value = name
+      qrIsOn.value = true
+    }
+  }
+  switch(name) {
+    case 'CNRS':
+    case 'uB':
+    case 'IMB':
+      qr(name)
+      break
+    case 'Pi':
+      page.value = 'Pi'
+      menuIsOn.value = false
+      rainIsOn.value = true
+      qrIsOn.value = false
+      trial.value && trial.value.show(false)
+      break
+    case 'Game':
+      page.value = 'Game'
+      menuIsOn.value = false
+      rainIsOn.value = true
+      qrIsOn.value = false
+      trial.value && trial.value.show(false)
+      break
+    case 'Barbier1':
+      page.value = 'Barbier1'
+      menuIsOn.value = false
+      rainIsOn.value = true
+      qrIsOn.value = false
+      trial.value && trial.value.show(false)
+      break
+    case 'Trial':
+      page.value = 'Trial'
+      trial.value && trial.value.show(true)
+      menuIsOn.value = false
+      rainIsOn.value = false
+      qrIsOn.value = false
+      break
+    default:
+      menuIsOn.value = true
+      rainIsOn.value = true
+      qrIsOn.value = false
+      trial.value && trial.value.show(false)
+      break
+  }
+}
+const main_store = useTrialStore()
+if (Menu && Pi) {}
 var controller: AbortController|null
 onMounted(()=>{
   controller = new AbortController();
@@ -23,7 +87,19 @@ onMounted(()=>{
     "keyup",
     (e: KeyboardEvent) => {
       if (e.key ==  "p") {
-        panel.value = Poetry
+        panel.value = Pi
+      } else if (e.key ==  "+") {
+        trial.value && trial.value.accelerate()
+      } else if (e.key ==  "-") {
+        trial.value && trial.value.decelerate()
+      } else if (e.key ==  "r") {
+        trial.value && trial.value.toggleRun()
+      } else if (e.key ==  "R") {
+        trial.value && trial.value.toggleRun(Number.MAX_SAFE_INTEGER)
+      } else if (e.key ==  "x") {
+        trial.value && trial.value.activate(true)
+      } else if (e.key ==  "X") {
+        trial.value && trial.value.activate(false)
       }
     },
     { signal: controller.signal }
@@ -36,8 +112,6 @@ onUnmounted(() => {
   isAbortController(controller) && controller.abort()
   controller = null
 })
-const rain = ref()
-const poetry = ref()
 const resizeListener = () => {
   var body = document.body
   var style = window.getComputedStyle(body, null)
@@ -50,8 +124,9 @@ const resizeListener = () => {
   || 1.1 * newFontSize <= fontSize ) {
     body.style.fontSize = newFontSize+'px'
   }
-  poetry.value && poetry.value.resizeListener()
-  rain.value && rain.value.resizeListener()
+  trial.value && trial.value.resizeListener()
+  rain.value  && rain.value.resizeListener()
+  pi.value && pi.value.resizeListener()
 }
 onMounted(() => {
   window.addEventListener('resize', resizeListener)
@@ -73,42 +148,7 @@ const enter = (el: Element, done: any) => {
     onComplete: done,
   })
 }
-const menuIsOn = ref(true)
-const page = ref('NONE')
-const menuSelect = (n: string) => {
-  menuIsOn.value = false
-  console.log('SELECT', n)
-  switch (n) {
-    case 'Pi':
-      page.value = 'Poetry'
-      break
-    default:
-      menuIsOn.value = true
-      console.log('SELECT', n)
-  }
-}
-
-const qrIsOn = ref(false)
 var qrImage = ref('None')
-const clicked = (what: string) => {
-  console.log('CLICKED', what)
-  switch (what) {
-    case 'CNRS':
-      qrIsOn.value = true
-      qrImage.value = 'QRCode-CNRS.png'
-      break
-    case 'uB':
-      qrIsOn.value = true
-      qrImage.value = 'QRCode-uB.png'
-      break
-    case 'IMB':
-      qrIsOn.value = true
-      qrImage.value = 'QRCode-IMB.png'
-      break
-    default:
-      qrIsOn.value = false
-  }
-}
 const dismissQR = () => {
   qrIsOn.value = false
 }
@@ -118,8 +158,8 @@ const isPage = (s: string): boolean => {
 }
 </script>
 <template>
-  <Trial/>
-  <Rain ref='rain' :z-index='999'/>
+  <Trial ref="trial" />
+  <Rain ref='rain' :z-index='999' v-if="rainIsOn"/>
   <Transition
     name='fade'
     v-if="qrIsOn"
@@ -135,15 +175,27 @@ const isPage = (s: string): boolean => {
     v-else-if="menuIsOn"
   >
     <!--component :if="panel" :is="panel" /-->
-    <Menu @on-selected="menuSelect"></Menu>
+    <Menu @on-selected="switchPage"></Menu>
   </Transition>
   <Transition
     name='fade'
-    v-else-if="isPage('Poetry')"
+    v-else-if="isPage('Pi')"
   >
-    <Poetry ref="poetry"></Poetry>
+    <Pi ref="pi"></Pi>
   </Transition>
-  <Toolbar @clicked="(n) => clicked(n)"/>
+  <Transition
+    name='fade'
+    v-else-if="isPage('Barbier1')"
+  >
+    <Barbier1 ref="barbier1"></Barbier1>
+  </Transition>
+  <Transition
+    name='fade'
+    v-else-if="isPage('Game')"
+  >
+    <Game ref="game"></Game>
+  </Transition>
+  <Toolbar @clicked="(n) => switchPage(n)"/>
 </template>
 
 <style lang="scss">

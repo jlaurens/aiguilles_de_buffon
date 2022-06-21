@@ -2,8 +2,18 @@
 const props = defineProps({
   image: String,
 })
+// let path = (image?: string): string => {
+//   return new URL('../../assets/' + image, import.meta.url).href
+// }
 let path = (image?: string): string => {
-  return new URL(`../../assets/${image}`, import.meta.url).href
+  var ans
+  try {
+    ans = new URL('/' + image, import.meta.url).href
+  } catch(e) {
+    ans = './' + image
+  }
+  console.log('ICON', ans)
+  return ans
 }
 </script>
 

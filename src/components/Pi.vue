@@ -244,27 +244,15 @@ const animate_first_line = (duration: number) => {
   var c  = style_w01__.getPropertyValue('color')
   var bc = style_w01__.getPropertyValue('borderColor')
   var f_2 = (pw: HTMLElement, pn: HTMLElement, label: string) => {
-  if (pw) {
-      tl.to(pw, {
-        color: c,
-        borderColor: bc,
-        duration: duration,
-      }, label)          
-      tl.to(pw, {
-        color: '',
-        duration: 0,
-      }, label)
-      if (style_w01__) {
-        tl.to(pn, {
-          color: style_w01__.getPropertyValue('color'),
-          duration: duration,
-        }, label)      
-      }      
-      tl.to(pn, {
-        color: '',
-        duration: 0,
-      }, label)      
-    }
+    tl.to(pw, {
+      color: c,
+      borderColor: bc,
+      duration: duration,
+    }, label)          
+    tl.to(pw, {
+      color: '',
+      duration: 0,
+    }, label)
   }
   var pw: HTMLElement|null = null
   var pn: HTMLElement|null = null
@@ -335,26 +323,24 @@ const animate_other_line = (
   const c =  style_w01__.getPropertyValue('color')
   const bc = style_w01__.getPropertyValue('borderColor')
   var f_2 = (pw: HTMLElement, pn: HTMLElement, label?: string) => {
-    if (pw) {
-      tl.to(pw, {
-        color: c,
-        borderColor: bc,
+    tl.to(pw, {
+      color: c,
+      borderColor: bc,
+      duration: 2*duration,
+    }, label)          
+    tl.to(pw, {
+      color: '',
+      duration: 0,
+    })
+    if (style_w01__) {
+      tl.to(pn, {
+        color: style_w01__.getPropertyValue('color'),
         duration: 2*duration,
-      }, label)          
-      tl.to(pw, {
+      }, label)      
+      tl.to(pn, {
         color: '',
         duration: 0,
-      })
-      if (style_w01__) {
-        tl.to(pn, {
-          color: style_w01__.getPropertyValue('color'),
-          duration: 2*duration,
-        }, label)      
-        tl.to(pn, {
-          color: '',
-          duration: 0,
-        })      
-      }
+      })      
     }
   }
   for(let e of rws()) {
@@ -376,7 +362,7 @@ const animate_other_line = (
 }
 const animate_center = (duration: number) => {
   const tl = gsap.timeline()
-  const t = ''+(window.innerHeight/2.1)+'px'
+  const t = ''+(window.innerHeight/2.5)+'px'
   const f = (en: HTMLElement) => {
     tl.to(en, {
       top: t,
@@ -479,8 +465,8 @@ const animate_place_numbers = (duration: number) => {
         duration: duration,
         ease: 'power1.inOut',
       }, ">-="+(33+(i-2)/29*67)+"%")
-      ++i
     }
+    ++i
   }
   en = n31b.value
   en.style.display = 'block'
@@ -506,26 +492,26 @@ const animate = () => {
       poetry_timeline__ = null
     },
   })
-  tl.add(animate_first_line(1))
+  tl.add(animate_first_line(2))
   tl.add(animate_other_line(
-    1,
+    2,
     generator_maker(refs.l1),
     generator_maker(refs.n1)
   ))
   tl.add(animate_other_line(
-    1,
+    2,
     generator_maker(refs.l2),
     generator_maker(refs.n2)
   ))
   tl.add(animate_other_line(
-    1,
+    2,
     generator_maker(refs.l3),
     generator_maker(refs.n3)
   ))
-  tl.add(animate_hide_words(1, refs.w_all))
-  tl.to({},{duration:1})
-  tl.add(animate_place_numbers(1))
-  tl.add(animate_center(1))
+  tl.add(animate_hide_words(2, refs.w_all))
+  tl.to({},{duration:4})
+  tl.add(animate_place_numbers(2))
+  tl.add(animate_center(2))
   poetry_timeline__ = tl
 }
 const numbers = ref() as unknown as Ref<HTMLElement>
@@ -704,7 +690,8 @@ const words: Ref<HTMLElement|undefined> = ref()
 const resizeListener = () => {
   console.log('RESIZE POETRY')
   const e = words.value
-  if (e) {
+  const n = numbers.value
+  if (e && n) {
     e.style.fontSize = ''
     const style = window.getComputedStyle(e, null)
     let i = parseFloat(style.getPropertyValue('font-size'))
@@ -713,7 +700,7 @@ const resizeListener = () => {
     console.log('font-size', i, w*0.0345)
     if (i>w*0.034) {
       i = w*0.034
-      e.style.fontSize = i + 'px'
+      e.style.fontSize = n.style.fontSize = i + 'px'
     }
   }
 }

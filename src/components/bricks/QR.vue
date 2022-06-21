@@ -11,7 +11,7 @@ const props = defineProps({
 
 <template>
 <Slide
-  :bg-name="props.bgName"
+  :bg-name="'./QRCode-'+props.bgName+'.png'"
   :z-index="props.zIndex"
   bg-size="contain"
 ><slot></slot></Slide>

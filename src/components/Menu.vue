@@ -16,24 +16,23 @@ defineEmits([
   <div class="menu">
     <h1 class="menu">Les aiguilles de Buffon</h1>
     <ul class="menu">
-      <li class="menu" @click="$emit('onSelected','Pi')">π</li>
+      <li class="menu" @click="$emit('onSelected','Game')">Le jeu</li>
+      <li class="menu" @click="$emit('onSelected','Pi')">Combien vaut π ?</li>
+      <li class="menu" @click="$emit('onSelected','Barbier1')">Des cercles bizarres</li>
+      <li class="menu" @click="$emit('onSelected','Trial')">Tirages</li>
     </ul>
-    <button @click="show = !show">Toggle</button>
-    <Transition name="fade" >
-      <p v-if="show">hello</p>
-    </Transition>
   </div>
 </Slide>
 </template>
 
 <style scoped>
 h1.menu {
-  font-size: 125%;
+  font-size: 133%;
   margin-block-start:0.2em;
   margin-block-end:0.4em;
 }
 ul.menu {
-  font-size: 1.5em;
+  font-size: 121%;
   margin-block-start:0.1em;
   margin-block-end:0.1em;
   padding-inline-start: 4em;
@@ -43,6 +42,9 @@ li.menu {
   cursor: pointer;
   padding-left:10px;
   padding-right:10px;
+}
+li.menu:hover {
+  color: rgb(192,0,192);
 }
 .fade-enter-active,
 .fade-leave-active {

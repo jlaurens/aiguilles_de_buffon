@@ -14,7 +14,7 @@ const props = defineProps({
 const style = computed(() => {
   return props.bgName
     ? {
-      background: 'url(/src/assets/'+props.bgName+')',
+      background: 'url('+props.bgName+')',
       backgroundPosition: 'center',
       backgroundSize: props.bgSize,
       backgroundRepeat: 'no-repeat',

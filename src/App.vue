@@ -9,14 +9,16 @@ import { useTrialStore } from './stores/trial'
 import Trial from './components/Trial.vue'
 import Toolbar from './components/Toolbar.vue'
 import Menu from './components/Menu.vue'
-import Pi from './components/Pi.vue'
+import Pi1 from './components/Pi1.vue'
+import Pi2 from './components/Pi2.vue'
 import Game from './components/Game.vue'
 import Rain from './components/bricks/Rain.vue'
 import QR from './components/bricks/QR.vue'
 import Barbier1 from './components/Barbier1.vue'
 const rain = ref()
 const rainIsOn = ref(true)
-const pi = ref()
+const pi1 = ref()
+const pi2 = ref()
 const game = ref()
 const trial = ref()
 const barbier1 = ref()
@@ -42,22 +44,11 @@ const switchPage = (name: string) => {
     case 'IMB':
       qr(name)
       break
-    case 'Pi':
-      page.value = 'Pi'
-      menuIsOn.value = false
-      rainIsOn.value = true
-      qrIsOn.value = false
-      trial.value && trial.value.show(false)
-      break
+    case 'Pi1':
+    case 'Pi2':
     case 'Game':
-      page.value = 'Game'
-      menuIsOn.value = false
-      rainIsOn.value = true
-      qrIsOn.value = false
-      trial.value && trial.value.show(false)
-      break
     case 'Barbier1':
-      page.value = 'Barbier1'
+      page.value = name
       menuIsOn.value = false
       rainIsOn.value = true
       qrIsOn.value = false
@@ -79,7 +70,7 @@ const switchPage = (name: string) => {
   }
 }
 const main_store = useTrialStore()
-if (Menu && Pi) {}
+if (Menu && Pi1) {}
 var controller: AbortController|null
 onMounted(()=>{
   controller = new AbortController();
@@ -87,7 +78,7 @@ onMounted(()=>{
     "keyup",
     (e: KeyboardEvent) => {
       if (e.key ==  "p") {
-        panel.value = Pi
+        panel.value = Pi1
       } else if (e.key ==  "+") {
         trial.value && trial.value.accelerate()
       } else if (e.key ==  "-") {
@@ -126,7 +117,7 @@ const resizeListener = () => {
   }
   trial.value && trial.value.resizeListener()
   rain.value  && rain.value.resizeListener()
-  pi.value && pi.value.resizeListener()
+  pi2.value && pi2.value.resizeListener()
 }
 onMounted(() => {
   window.addEventListener('resize', resizeListener)
@@ -179,9 +170,15 @@ const isPage = (s: string): boolean => {
   </Transition>
   <Transition
     name='fade'
-    v-else-if="isPage('Pi')"
+    v-else-if="isPage('Pi1')"
   >
-    <Pi ref="pi"></Pi>
+    <Pi1 ref="pi1"></Pi1>
+  </Transition>
+  <Transition
+    name='fade'
+    v-else-if="isPage('Pi2')"
+  >
+    <Pi2 ref="pi2"></Pi2>
   </Transition>
   <Transition
     name='fade'
@@ -214,6 +211,14 @@ const isPage = (s: string): boolean => {
 @font-face {
   font-family: VictorMono-Italic;
   src: url('./fonts/VictorMono-SemiBoldItalic.woff') format('woff');
+}
+@font-face {
+  font-family: GFSNeohellenic-Regular;
+  src: url('./fonts/GFSNeohellenic-Regular.woff') format('woff');
+}
+@font-face {
+  font-family: IBMPlexSans-Regular;
+  src: url('./fonts/IBMPlexSans-Regular.woff') format('woff');
 }
 
 #app {

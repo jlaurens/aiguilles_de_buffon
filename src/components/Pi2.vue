@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { Ref, ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { gsap } from 'gsap'
-import { truncate } from 'fs';
 const w01  = ref()
 const w02  = ref()
 const w02b = ref()

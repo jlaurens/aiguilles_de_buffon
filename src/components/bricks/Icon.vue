@@ -1,6 +1,14 @@
 <script setup lang="ts">
 const props = defineProps({
   image: String,
+  size: {
+    type: String,
+    default: "96px",
+  },
+  padding: {
+    type: String,
+    default: "10px",
+  },
 })
 // let path = (image?: string): string => {
 //   return new URL('../../assets/' + image, import.meta.url).href
@@ -29,9 +37,9 @@ let path = (image?: string): string => {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  width:  96px;
-  height: 96px;
-  padding: 0px 10px;
+  width:  v-bind('props.size');
+  height: v-bind('props.size');
+  padding: 0px v-bind('props.padding');
 }
 .icon>img {
   width: 100%;

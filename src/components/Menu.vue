@@ -16,8 +16,8 @@ defineEmits([
   <div class="menu">
     <h1 class="menu">Les aiguilles de Buffon</h1>
     <ul class="menu">
-      <li class="menu" @click="$emit('onSelected','Game')">Le jeu</li>
-      <li class="menu" @click="$emit('onSelected','Pi')">Combien vaut π ?</li>
+      <li class="menu" @click="$emit('onSelected','Game')">Le jeu des aiguilles</li>
+      <li class="menu" @click="$emit('onSelected','Pi1')">Combien vaut π ?</li>
       <li class="menu" @click="$emit('onSelected','Barbier1')">Des cercles bizarres</li>
       <li class="menu" @click="$emit('onSelected','Trial')">Tirages</li>
     </ul>

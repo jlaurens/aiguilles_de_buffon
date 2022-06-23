@@ -5,6 +5,14 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  hPadding: {
+    type: Number,
+    default: 0,
+  },
+  vPadding: {
+    type: Number,
+    default: 0,
+  },
   bgName: String,
   bgSize: {
     type: String,
@@ -23,11 +31,17 @@ const style = computed(() => {
       zIndex: props.zIndex,
     }
 })
+const vPadding = computed(() =>{
+  return props.vPadding+'px'
+})
+const hPadding = computed(() =>{
+  return props.hPadding+'px'
+})
 </script>
 
 <template>
 <div
-  class="brick-slide"
+  class="slide"
   :style="style"
 >
   <slot></slot>
@@ -35,11 +49,11 @@ const style = computed(() => {
 </template>
 
 <style scoped>
-.brick-slide {
+.slide {
   position: absolute;
-  top: 0px;
-  left: 0px;
-  bottom: 0px;
-  right: 0px;
+  top: v-bind('vPadding');
+  left: v-bind('hPadding');
+  bottom: v-bind('vPadding');
+  right:  v-bind('hPadding');
 }
 </style>

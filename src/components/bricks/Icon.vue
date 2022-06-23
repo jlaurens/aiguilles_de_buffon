@@ -2,12 +2,12 @@
 const props = defineProps({
   image: String,
   size: {
-    type: String,
-    default: "96px",
+    type: Number,
+    default: 96,
   },
   padding: {
-    type: String,
-    default: "10px",
+    type: Number,
+    default: 10,
   },
 })
 // let path = (image?: string): string => {
@@ -37,9 +37,9 @@ let path = (image?: string): string => {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  width:  v-bind('props.size');
-  height: v-bind('props.size');
-  padding: 0px v-bind('props.padding');
+  width:  v-bind('props.size+"px"');
+  height: v-bind('props.size+"px"');
+  padding: 0px v-bind('props.padding'+"px");
 }
 .icon>img {
   width: 100%;

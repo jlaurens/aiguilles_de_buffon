@@ -35,7 +35,7 @@ const props = defineProps({
 .table {
   display: table;
   table-layout: auto;
-  height: calc(100% - v-bind('props.size'));
+  height: v-bind("calc(100% - "+'props.size'+")");
   width: 100%;
 }
 .main {
@@ -45,7 +45,7 @@ const props = defineProps({
   display: table-row;
 }
 .first {
-  height: v-bind('props.size') px;
+  height: v-bind('props.size+"px"');
 }
 .last {
   height: 100%;

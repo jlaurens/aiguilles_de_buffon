@@ -140,6 +140,26 @@
     lodash "^4.17.15"
     tmp-promise "^3.0.2"
 
+"@mathigon/core@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@mathigon/core/-/core-1.1.1.tgz#d18b535c0d54b5049a6bf3e5f485d4973a58cd76"
+  integrity sha512-uWH/N2L37I9TkTvde8mFhV/2Sqyd9dqgpHu8FIOm23+nHHyN4WMhVmrkM56bFhxYYN8k+N4gJuSvJ9tBSUEa6A==
+
+"@mathigon/euclid@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@mathigon/euclid/-/euclid-1.1.1.tgz#859dd254ee521bad67c91439e2503e33b92dc568"
+  integrity sha512-1/Tl5ImfhjOdtbLH4oW1jzurqMn32Lu8PXWxA7cgFVQdD68F4r0NprKJi94Cdh3A35UPhCwXKlOfMO/ZoRN1FQ==
+  dependencies:
+    "@mathigon/core" "1.1.1"
+    "@mathigon/fermat" "1.1.1"
+
+"@mathigon/fermat@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@mathigon/fermat/-/fermat-1.1.1.tgz#a9239ed8762c972c8622decf47b0a4f0168a2d4d"
+  integrity sha512-tZgLRQ1akGaxHQZZH9+5q5B6hr9pQYg8vsPTSuqWnxOafYZuRJjwBRBUOgl5a4eH+WvSqn0uF/bjyHzAkDKNag==
+  dependencies:
+    "@mathigon/core" "1.1.1"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

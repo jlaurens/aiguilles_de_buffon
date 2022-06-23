@@ -22,7 +22,7 @@
     "copyright": "Copyright © 2022 ${author}",
     "mac": {
       "category": "public.app-category.utilities",
-      "hardenedRuntime" : true,
+      "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist"
@@ -44,6 +44,7 @@
     }
   },
   "dependencies": {
+    "@mathigon/euclid": "^1.1.1",
     "gsap": "^3.10.4",
     "path-browserify": "^1.0.1",
     "pinia": "^2.0.14",

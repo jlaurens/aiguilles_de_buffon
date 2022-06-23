@@ -164,7 +164,7 @@ onMounted(() => {
 .vertical {
   display: table;
   table-layout: auto;
-  height: calc(100% - v-bind('props.size'));
+  height: v-bind('"calc(100% - "+props.size+")"');
   width: 100%;
 }
 .main {

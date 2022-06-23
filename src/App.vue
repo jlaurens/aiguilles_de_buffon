@@ -4,16 +4,19 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import { gsap } from 'gsap'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useTrialStore } from './stores/trial'
+import Icon from './components/bricks/Icon.vue'
+import Title from './components/bricks/Title.vue'
+import Slide from './components/bricks/Slide.vue'
+import Toolbar from './components/bricks/Toolbar.vue'
+import Rain from './components/bricks/Rain.vue'
+import QR from './components/bricks/QR.vue'
 import Trial from './components/Trial.vue'
-import Toolbar from './components/Toolbar.vue'
 import Menu from './components/Menu.vue'
 import Pi1 from './components/Pi1.vue'
 import Pi2 from './components/Pi2.vue'
 import Game from './components/Game.vue'
-import Rain from './components/bricks/Rain.vue'
-import QR from './components/bricks/QR.vue'
 import Barbier1 from './components/Barbier1.vue'
 const rain = ref()
 const rainIsOn = ref(true)
@@ -26,7 +29,16 @@ const panel = ref(null as any)
 panel.value = Menu
 const menuIsOn = ref(true)
 const page = ref('NONE')
+const trialIsOn = ref(false)
 const qrIsOn = ref(false)
+const title_by_name = {
+  'Pi1': '',
+  'Pi2': '',
+  'Game': 'Le jeux des aiguilles',
+  'Barbier1': 'Des cercles bizarres',
+  'Menu': 'Les aiguilles de Buffon',
+}
+const title = ref(title_by_name['Menu'])
 const switchPage = (name: string) => {
   const qr = (name: string) => {
     const png = name
@@ -48,22 +60,28 @@ const switchPage = (name: string) => {
     case 'Pi2':
     case 'Game':
     case 'Barbier1':
+      title.value = title_by_name[name]
       page.value = name
       menuIsOn.value = false
       rainIsOn.value = true
+      trialIsOn.value = false
       qrIsOn.value = false
       trial.value && trial.value.show(false)
       break
     case 'Trial':
-      page.value = 'Trial'
+      title.value = ''
+      page.value = name
       trial.value && trial.value.show(true)
       menuIsOn.value = false
       rainIsOn.value = false
+      trialIsOn.value = true
       qrIsOn.value = false
       break
     default:
+      title.value = title_by_name['Menu']
       menuIsOn.value = true
       rainIsOn.value = true
+      trialIsOn.value = false
       qrIsOn.value = false
       trial.value && trial.value.show(false)
       break
@@ -95,6 +113,7 @@ onMounted(()=>{
     },
     { signal: controller.signal }
   );
+  switchPage('Barbier1')
 })
 const isAbortController = (controller: AbortController|null): controller is AbortController => {
   return !!controller
@@ -118,6 +137,7 @@ const resizeListener = () => {
   trial.value && trial.value.resizeListener()
   rain.value  && rain.value.resizeListener()
   pi2.value && pi2.value.resizeListener()
+  barbier1.value && barbier1.value.resizeListener()
 }
 onMounted(() => {
   window.addEventListener('resize', resizeListener)
@@ -147,6 +167,9 @@ const isPage = (s: string): boolean => {
   console.log('IS_PAGE', s, page.value)
   return page.value == s
 }
+const height = computed(() => {
+  return 3*window.innerHeight/24
+})
 </script>
 <template>
   <Trial ref="trial" />
@@ -159,40 +182,50 @@ const isPage = (s: string): boolean => {
     <div class="qrcode-help">Cliquer l'image pour fermer</div>
     </QR>
   </Transition>
-  <Transition
-    :css='false'
-    @before-enter='beforeEnter'
-    @enter='enter'
-    v-else-if="menuIsOn"
-  >
-    <!--component :if="panel" :is="panel" /-->
-    <Menu @on-selected="switchPage"></Menu>
-  </Transition>
-  <Transition
-    name='fade'
-    v-else-if="isPage('Pi1')"
-  >
-    <Pi1 ref="pi1"></Pi1>
-  </Transition>
-  <Transition
-    name='fade'
-    v-else-if="isPage('Pi2')"
-  >
-    <Pi2 ref="pi2"></Pi2>
-  </Transition>
-  <Transition
-    name='fade'
-    v-else-if="isPage('Barbier1')"
-  >
-    <Barbier1 ref="barbier1"></Barbier1>
-  </Transition>
-  <Transition
-    name='fade'
-    v-else-if="isPage('Game')"
-  >
-    <Game ref="game"></Game>
-  </Transition>
-  <Toolbar @clicked="(n) => switchPage(n)"/>
+  <Slide v-if="!trialIsOn" :z-index="1000">
+    <Title>{{title}}</Title>
+    <Slide :v-padding="height" :z-index="1000">
+    <Transition
+      :css='false'
+      @before-enter='beforeEnter'
+      @enter='enter'
+      v-if="menuIsOn"
+    >
+      <!--component :if="panel" :is="panel" /-->
+      <Menu @on-selected="switchPage"></Menu>
+    </Transition>
+    <Transition
+      name='fade'
+      v-else-if="isPage('Pi1')"
+    >
+      <Pi1 ref="pi1"></Pi1>
+    </Transition>
+    <Transition
+      name='fade'
+      v-else-if="isPage('Pi2')"
+    >
+      <Pi2 ref="pi2"></Pi2>
+    </Transition>
+    <Transition
+      name='fade'
+      v-else-if="isPage('Barbier1')"
+    >
+      <Barbier1 ref="barbier1"></Barbier1>
+    </Transition>
+    <Transition
+      name='fade'
+      v-else-if="isPage('Game')"
+    >
+      <Game ref="game"></Game>
+    </Transition>
+    </Slide>
+  </Slide>
+  <Toolbar>
+    <Icon image="menu_dots.png" @click="switchPage('Menu')"/>
+    <Icon image="logo_IMB.png" @click="switchPage('IMB')"/>
+    <Icon image="logo-uB-filet.png" @click="switchPage('uB')"/>
+    <Icon image="logo_CNRS.png" @click="switchPage('CNRS')"/>
+  </Toolbar>
 </template>
 
 <style lang="scss">

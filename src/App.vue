@@ -176,7 +176,7 @@ const height = computed(() => {
 })
 </script>
 <template>
-  <!--Trial ref="trial" />
+  <Trial ref="trial" />
   <Rain ref='rain' :z-index='999' v-if="rainIsOn"/>
   <Transition
     name='fade'
@@ -185,7 +185,7 @@ const height = computed(() => {
     <QR :bg-name='qrImage' bg-size="contain" @click="dismissQR()">
       <div class="qrcode-help">Cliquer l'image pour fermer</div>
     </QR>
-  </Transition-->
+  </Transition>
   <Slide v-if="!trialIsOn" :z-index="1000">
     <Title>{{title}}</Title>
     <Slide :v-padding="height" :z-index="1000">

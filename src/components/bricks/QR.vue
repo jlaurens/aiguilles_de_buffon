@@ -14,7 +14,8 @@ const props = defineProps({
   :bg-name="'./QRCode-'+props.bgName+'.png'"
   :z-index="props.zIndex"
   bg-size="contain"
-><slot></slot></Slide>
+><slot></slot>
+</Slide>
 </template>
 
 <style scoped>

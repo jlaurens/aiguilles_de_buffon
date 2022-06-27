@@ -493,44 +493,44 @@ const pnt_Ps = computed(() => {
 
 <template>
 <div>
-<div class="svg-container">
-<svg ref="svgRoot" version="1.1" :viewBox="viewBox" class="svg-content">
-<defs ref="svgDefs"></defs>
-<line x1="0" :y1="y0-2*r" :x2="w" :y2="y0-2*r" stroke="black" class="line top"/>
-<line x1="0" :y1="y0" :x2="w" :y2="y0" stroke="black" class="line bottom"/>
-<g  ref="circle">
-  <circle :cx="circle_x" :cy="circle_y" :r="r" class="circle"/>
-  <line :x1="circle_x" :y1="circle_y" :x2="circle_origin.x" :y2="circle_origin.y" class="radius transparent"/>
-  <circle ref="circle_origin" :cx="circle_origin.x" :cy="circle_origin.y" r="5" class="circle_dot"></circle>
-  <line x1="0" :y1="circle_y_min" :x2="w" :y2="circle_y_min" :stroke="circle_color" class="line top"/>
-</g>
-<g ref="square" class="hidden" >
-  <polygon :points="square_points" class="square" />  
-  <circle ref="square_origin" :cx="sqr_Ps[0].x" :cy="sqr_Ps[0].y" r="5" class="square_dot"></circle>
-  <line x1="0" :y1="square_y_min" :x2="w" :y2="square_y_min" :stroke="square_color" class="line top"/>
-</g>
-<g ref="triangle" class="hidden">
-  <polygon :points="triangle_points" class="triangle"/>
-  <circle ref="triangle_origin" :cx="trngl_Ps[0].x" :cy="trngl_Ps[0].y" r="5" class="triangle_dot"></circle>
-  <line x1="0" :y1="triangle_y_min" :x2="w" :y2="triangle_y_min" :stroke="triangle_color" class="line top"/>
-</g>
-<g ref="reuleaux" class="hidden">
-  <path :d="reuleaux_d" class="reuleaux"/>
-  <circle ref="reuleaux_origin" :cx="rlx_Ps[0].x" :cy="rlx_Ps[0].y" r="5" class="reuleaux_dot"></circle>
-  <line x1="0" :y1="reuleaux_y_min" :x2="w" :y2="reuleaux_y_min" :stroke="reuleaux_color" class="line top"/>
-</g>
-<g ref="penta" class="hidden">
-  <path :d="penta_d" class="penta"/>
-  <polygon :points="penta_points" ref="pentacle" class="penta transparent" />
-  <circle ref="pentacle_origin" :cx="pnt_Ps[4].x" :cy="pnt_Ps[4].y" r="5" class="penta_dot"></circle>
-  <line x1="0" :y1="penta_y_min" :x2="w" :y2="penta_y_min" :stroke="penta_color" class="line top"/>
-</g>
-</svg>
-</div>
-<div ref="l1">Une roue ronde tourne entre deux lignes parallèles fixes,</div>
-<div ref="l2" class="hidden">mais pas une roue carré,<span ref="l3" class="hidden"> ni une roue triangle,</span></div>
-<div ref="l4" class="hidden">à moins d'arrondir correctement les côtés.</div>
-<div ref="l5" class="hidden">On peut augmenter le nombres de côtés...</div>
+  <div class="svg-container">
+  <svg ref="svgRoot" version="1.1" :viewBox="viewBox" class="svg-content">
+  <defs ref="svgDefs"></defs>
+  <line x1="0" :y1="y0-2*r" :x2="w" :y2="y0-2*r" stroke="black" class="line top"/>
+  <line x1="0" :y1="y0" :x2="w" :y2="y0" stroke="black" class="line bottom"/>
+  <g  ref="circle">
+    <circle :cx="circle_x" :cy="circle_y" :r="r" class="circle"/>
+    <line :x1="circle_x" :y1="circle_y" :x2="circle_origin.x" :y2="circle_origin.y" class="radius transparent"/>
+    <circle ref="circle_origin" :cx="circle_origin.x" :cy="circle_origin.y" r="5" class="circle_dot"></circle>
+    <line x1="0" :y1="circle_y_min" :x2="w" :y2="circle_y_min" :stroke="circle_color" class="line top"/>
+  </g>
+  <g ref="square" class="hidden" >
+    <polygon :points="square_points" class="square" />  
+    <circle ref="square_origin" :cx="sqr_Ps[0].x" :cy="sqr_Ps[0].y" r="5" class="square_dot"></circle>
+    <line x1="0" :y1="square_y_min" :x2="w" :y2="square_y_min" :stroke="square_color" class="line top"/>
+  </g>
+  <g ref="triangle" class="hidden">
+    <polygon :points="triangle_points" class="triangle"/>
+    <circle ref="triangle_origin" :cx="trngl_Ps[0].x" :cy="trngl_Ps[0].y" r="5" class="triangle_dot"></circle>
+    <line x1="0" :y1="triangle_y_min" :x2="w" :y2="triangle_y_min" :stroke="triangle_color" class="line top"/>
+  </g>
+  <g ref="reuleaux" class="hidden">
+    <path :d="reuleaux_d" class="reuleaux"/>
+    <circle ref="reuleaux_origin" :cx="rlx_Ps[0].x" :cy="rlx_Ps[0].y" r="5" class="reuleaux_dot"></circle>
+    <line x1="0" :y1="reuleaux_y_min" :x2="w" :y2="reuleaux_y_min" :stroke="reuleaux_color" class="line top"/>
+  </g>
+  <g ref="penta" class="hidden">
+    <path :d="penta_d" class="penta"/>
+    <polygon :points="penta_points" ref="pentacle" class="penta transparent" />
+    <circle ref="pentacle_origin" :cx="pnt_Ps[4].x" :cy="pnt_Ps[4].y" r="5" class="penta_dot"></circle>
+    <line x1="0" :y1="penta_y_min" :x2="w" :y2="penta_y_min" :stroke="penta_color" class="line top"/>
+  </g>
+  </svg>
+  </div>
+  <div ref="l1">Une roue ronde tourne entre deux lignes parallèles fixes,</div>
+  <div ref="l2" class="hidden">mais pas une roue carré,<span ref="l3" class="hidden"> ni une roue triangle,</span></div>
+  <div ref="l4" class="hidden">à moins d'arrondir correctement les côtés.</div>
+  <div ref="l5" class="hidden">On peut augmenter le nombres de côtés...</div>
 </div>
 </template>
 

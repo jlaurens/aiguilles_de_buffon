@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Slide from './bricks/Slide.vue'
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { gsap } from 'gsap'
 const props = defineProps({
   size: {
@@ -51,12 +51,10 @@ const animate = (s: number) => {
   })
    tl.to(alpha_el, {
     opacity: 1,
-    color: color,
     duration: 0.5,
   })
   tl.to(bet_el, {
     opacity: 1,
-    color: color,
     duration: 0.5,
   })
   tl.to(alpha_el, {
@@ -124,27 +122,27 @@ onMounted(() => {
 </script>
 
 <template>
-<div class="main">
-  <div class="hidden" ref="l1">
-    <span class="greek">α</span> et <span class="greek">β</span> sont les deux premières lettres de l'alphabet grec.
+  <div class="main">
+    <div class="hidden" ref="l1">
+      <span class="greek colored">α</span> et <span class="greek colored">β</span> sont les deux premières lettres de l'alphabet grec.
+    </div>
+    <div>
+      <span class="hidden" ref="l2"><span class="greek">α</span> est lue «<span class="from" ref="from_alpha">alpha</span>», </span>
+      <span class="hidden" ref="l3"><span class="greek">β</span> est lue «<span class="from" ref="from_bet">bét</span>a»... </span>
+      <span class="hidden" ref="l4"> d'où le mot <span class="to hidden" ref="to_alpha">alpha</span><span class="to hidden" ref="to_bet">bet</span></span>
+      <span class="hidden absolute colored" ref="alpha">alpha</span><span class="hidden absolute colored" ref="bet">bet</span>
+    </div>
+    <div>
+      <span class="hidden" ref="l5"><span class="greek colored">π</span> correspond à notre lettre «p», elle est lue «pi»,</span>
+    </div>
+    <div class="hidden" ref="l6">
+      c'est la première lettre du mot grec <span class="greek shadow" ref="perimetros">περίμετρος</span>
+      <br><span class="hidden" ref="l7">qu'on prononce «périmétros»</span>
+      <br><span class="hidden" ref="l8">
+      et qui désigne le <span class="colored">périmètre</span> !
+      </span>
+    </div>
   </div>
-  <div>
-    <span class="hidden" ref="l2"><span class="greek">α</span> est lue «<span class="from" ref="from_alpha">alpha</span>», </span>
-    <span class="hidden" ref="l3"><span class="greek">β</span> est lue «<span class="from" ref="from_bet">bét</span>a»... </span>
-    <span class="hidden" ref="l4"> d'où le mot <span class="to hidden" ref="to_alpha">alpha</span><span class="to hidden" ref="to_bet">bet</span></span>
-    <span class="hidden absolute" ref="alpha">alpha</span><span class="hidden absolute" ref="bet">bet</span>
-  </div>
-  <div>
-    <span class="hidden" ref="l5"><span class="greek colored">π</span> correspond à notre lettre «p», elle est lue «pi»,</span>
-  </div>
-  <div class="hidden" ref="l6">
-    c'est la première lettre du mot grec <span class="greek" ref="perimetros">περίμετρος</span>
-    <br><span class="hidden" ref="l7">qu'on prononce «périmétros»</span>
-    <br><span class="hidden" ref="l8">
-    et qui désigne le <span class="colored">périmètre</span> !
-    </span>
-  </div>
-</div>
 </template>
 
 <style scoped>
@@ -163,6 +161,9 @@ onMounted(() => {
 }
 .colored {
   color: v-bind('color');
+}
+.colored, .shadow {
+  text-shadow: 0px 2px 3px rgba(0,0,0,0.25);
 }
 .main {
   padding-top:100px;

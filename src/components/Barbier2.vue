@@ -271,88 +271,92 @@ const reuleaux_d = computed(() => {
     + ' Z'
 })
 const tl = gsap.timeline()
-const l1 = ref<HTMLElement>()
-const l2 = ref<HTMLElement>()
-const l3 = ref<HTMLElement>()
-const l4 = ref<HTMLElement>()
-const l5 = ref<HTMLElement>()
+const d1 = ref<HTMLElement>()
+const d1l1 = ref<HTMLElement>()
+const d1l2 = ref<HTMLElement>()
+const d1l3 = ref<HTMLElement>()
+const d1l4 = ref<HTMLElement>()
+const d1l5 = ref<HTMLElement>()
+const d2 = ref<HTMLElement>()
+const d2l1 = ref<HTMLElement>()
 onMounted(() => {
   if (circle.value && square.value && triangle.value && reuleaux.value && penta.value &&
-        l1.value && l2.value && l3.value && l4.value && l5.value)
+        d1.value && d1l1.value && d1l2.value && d1l3.value && d1l4.value && d1l5.value &&
+        d2.value && d2l1.value)
   {
-    tl.to(circle_s, {
-      value: 1,
-      duration: 5,
-      ease: 'power1.inOut',
-    })
-    tl.to(circle_s, {
-      value: 0,
-      duration: 5,
-      ease: 'power1.inOut',
-    })
-    tl.to(l2.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(square.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(square_s, {
-      value: 1,
-      duration: 5,
-      ease: 'power1.inOut',
-    })
-    tl.to(square_s, {
-      value: 0,
-      duration: 5,
-      ease: 'power1.inOut',
-    })
-    tl.to(square.value, {
-      opacity: 0,
-      duration: 2,
-    })
-    tl.to(l3.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(triangle.value, {
-      opacity: 1,
-      duration: 2,
-    }, '<')
-    tl.to(triangle_s, {
-      value: 1,
-      duration: 5,
-      ease: 'power1.inOut',
-    })
-    tl.to(triangle_s, {
-      value: 0,
-      duration: 5,
-      ease: 'power1.inOut',
-    })
-    tl.to(l4.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(reuleaux.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(triangle.value, {
-      opacity: 0,
-      duration: 2,
-    }, '<')
-    tl.to(reuleaux_s, {
-      value: 1,
-      duration: 15,
-      ease: 'power1.inOut',
-    })
-    tl.to(reuleaux_s, {
-      value: 0,
-      duration: 5,
-      ease: 'power1.inOut',
-    })
-    tl.to(l5.value, {
+    // tl.to(circle_s, {
+    //   value: 1,
+    //   duration: 5,
+    //   ease: 'power1.inOut',
+    // })
+    // tl.to(circle_s, {
+    //   value: 0,
+    //   duration: 5,
+    //   ease: 'power1.inOut',
+    // })
+    // tl.to(d1l2.value, {
+    //   opacity: 1,
+    //   duration: 2,
+    // })
+    // tl.to(square.value, {
+    //   opacity: 1,
+    //   duration: 2,
+    // })
+    // tl.to(square_s, {
+    //   value: 1,
+    //   duration: 5,
+    //   ease: 'power1.inOut',
+    // })
+    // tl.to(square_s, {
+    //   value: 0,
+    //   duration: 5,
+    //   ease: 'power1.inOut',
+    // })
+    // tl.to(square.value, {
+    //   opacity: 0,
+    //   duration: 2,
+    // })
+    // tl.to(d1l3.value, {
+    //   opacity: 1,
+    //   duration: 2,
+    // })
+    // tl.to(triangle.value, {
+    //   opacity: 1,
+    //   duration: 2,
+    // }, '<')
+    // tl.to(triangle_s, {
+    //   value: 1,
+    //   duration: 5,
+    //   ease: 'power1.inOut',
+    // })
+    // tl.to(triangle_s, {
+    //   value: 0,
+    //   duration: 5,
+    //   ease: 'power1.inOut',
+    // })
+    // tl.to(d1l4.value, {
+    //   opacity: 1,
+    //   duration: 2,
+    // })
+    // tl.to(reuleaux.value, {
+    //   opacity: 1,
+    //   duration: 2,
+    // })
+    // tl.to(triangle.value, {
+    //   opacity: 0,
+    //   duration: 2,
+    // }, '<')
+    // tl.to(reuleaux_s, {
+    //   value: 1,
+    //   duration: 15,
+    //   ease: 'power1.inOut',
+    // })
+    // tl.to(reuleaux_s, {
+    //   value: 0,
+    //   duration: 5,
+    //   ease: 'power1.inOut',
+    // })
+    tl.to(d1l5.value, {
       opacity: 1,
       duration: 2,
     })
@@ -373,6 +377,22 @@ onMounted(() => {
       value: 0,
       duration: 10,
       ease: 'power1.inOut',
+    })
+    tl.to(d1.value, {
+      opacity: 0,
+      duration: 2,
+    })
+    tl.to(d1.value, {
+      display: "none",
+      duration: 0,
+    })
+    tl.to(d1.value, {
+      opacity: 1,
+      duration: 2,
+    })
+    tl.to(d2.value, {
+      display: "block",
+      duration: 0,
     })
   }
 })
@@ -492,7 +512,6 @@ const pnt_Ps = computed(() => {
 </script>
 
 <template>
-<div>
 <div class="svg-container">
 <svg ref="svgRoot" version="1.1" :viewBox="viewBox" class="svg-content">
 <defs ref="svgDefs"></defs>
@@ -527,10 +546,11 @@ const pnt_Ps = computed(() => {
 </g>
 </svg>
 </div>
-<div ref="l1">Une roue ronde tourne entre deux lignes parallèles fixes,</div>
-<div ref="l2" class="hidden">mais pas une roue carré,<span ref="l3" class="hidden"> ni une roue triangle,</span></div>
-<div ref="l4" class="hidden">à moins d'arrondir correctement les côtés.</div>
-<div ref="l5" class="hidden">On peut augmenter le nombres de côtés...</div>
+<div ref="d1">
+<div ref="d1l1">Une roue ronde tourne entre deux lignes parallèles fixes,</div>
+<div ref="d1l2" class="hidden">mais pas une roue carré,<span ref="d1l3" class="hidden"> ni une roue triangle,</span></div>
+<div ref="d1l4" class="hidden">à moins d'arrondir correctement les côtés.</div>
+<div ref="d1l5" class="hidden">On peut augmenter le nombres de côtés...</div>
 </div>
 </template>
 

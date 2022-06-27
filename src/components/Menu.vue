@@ -9,7 +9,7 @@ defineEmits([
     <ul class="menu">
       <li class="menu" @click="$emit('onSelected','Game')">Le jeu des aiguilles</li>
       <li class="menu" @click="$emit('onSelected','Pi1')">Combien vaut π ?</li>
-      <li class="menu" @click="$emit('onSelected','Barbier1')">Des cercles bizarres</li>
+      <li class="menu" @click="$emit('onSelected','Barbier1')">Des cercles pas très ronds</li>
       <li class="menu" @click="$emit('onSelected','Trial')">Tirages</li>
     </ul>
   </div>

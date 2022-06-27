@@ -18,6 +18,7 @@ import Pi1 from './components/Pi1.vue'
 import Pi2 from './components/Pi2.vue'
 import Game from './components/Game.vue'
 import Barbier1 from './components/Barbier1.vue'
+import Barbier2 from './components/Barbier2.vue'
 const rain = ref()
 const rainIsOn = ref(true)
 const pi1 = ref()
@@ -25,6 +26,7 @@ const pi2 = ref()
 const game = ref()
 const trial = ref()
 const barbier1 = ref()
+const barbier2 = ref()
 const panel = ref(null as any)
 panel.value = Menu
 const menuIsOn = ref(true)
@@ -32,10 +34,11 @@ const page = ref('NONE')
 const trialIsOn = ref(false)
 const qrIsOn = ref(false)
 const title_by_name = {
-  'Pi1': '',
+  'Pi1': 'Savez-vous parler grec ?',
   'Pi2': '',
   'Game': 'Le jeux des aiguilles',
-  'Barbier1': 'Des cercles bizarres',
+  'Barbier1': 'Des roues pas vraiment rondes',
+  'Barbier2': 'Des roues qui avancent pareil',
   'Menu': 'Les aiguilles de Buffon',
 }
 const title = ref(title_by_name['Menu'])
@@ -60,6 +63,7 @@ const switchPage = (name: string) => {
     case 'Pi2':
     case 'Game':
     case 'Barbier1':
+    case 'Barbier2':
       title.value = title_by_name[name]
       page.value = name
       menuIsOn.value = false
@@ -113,7 +117,7 @@ onMounted(()=>{
     },
     { signal: controller.signal }
   );
-  switchPage('Barbier1')
+  switchPage('Pi1')
 })
 const isAbortController = (controller: AbortController|null): controller is AbortController => {
   return !!controller
@@ -172,16 +176,16 @@ const height = computed(() => {
 })
 </script>
 <template>
-  <Trial ref="trial" />
+  <!--Trial ref="trial" />
   <Rain ref='rain' :z-index='999' v-if="rainIsOn"/>
   <Transition
     name='fade'
     v-if="qrIsOn"
   >
     <QR :bg-name='qrImage' bg-size="contain" @click="dismissQR()">
-    <div class="qrcode-help">Cliquer l'image pour fermer</div>
+      <div class="qrcode-help">Cliquer l'image pour fermer</div>
     </QR>
-  </Transition>
+  </Transition-->
   <Slide v-if="!trialIsOn" :z-index="1000">
     <Title>{{title}}</Title>
     <Slide :v-padding="height" :z-index="1000">
@@ -191,7 +195,6 @@ const height = computed(() => {
       @enter='enter'
       v-if="menuIsOn"
     >
-      <!--component :if="panel" :is="panel" /-->
       <Menu @on-selected="switchPage"></Menu>
     </Transition>
     <Transition
@@ -211,6 +214,12 @@ const height = computed(() => {
       v-else-if="isPage('Barbier1')"
     >
       <Barbier1 ref="barbier1"></Barbier1>
+    </Transition>
+    <Transition
+      name='fade'
+      v-else-if="isPage('Barbier2')"
+    >
+      <Barbier2 ref="barbier2"></Barbier2>
     </Transition>
     <Transition
       name='fade'

@@ -2,8 +2,8 @@
 import Slide from './Slide.vue'
 const props = defineProps({
   size: {
-    type: String,
-    default: '96px',
+    type: Number,
+    default: 96,
   },
   zIndex: {
     type: Number,
@@ -35,7 +35,7 @@ const props = defineProps({
 .table {
   display: table;
   table-layout: auto;
-  height: v-bind("calc(100% - "+'props.size'+")");
+  height: v-bind('"calc(100% - "+props.size+"px)"');
   width: 100%;
 }
 .main {

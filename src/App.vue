@@ -35,7 +35,7 @@ const trialIsOn = ref(false)
 const qrIsOn = ref(false)
 const title_by_name = {
   'Pi1': 'Savez-vous parler grec ?',
-  'Pi2': '',
+  'Pi2': 'Combien vaut π',
   'Game': 'Le jeux des aiguilles',
   'Barbier1': 'Des roues pas vraiment rondes',
   'Barbier2': 'Des roues qui avancent pareil',
@@ -117,7 +117,7 @@ onMounted(()=>{
     },
     { signal: controller.signal }
   );
-  switchPage('Pi1')
+  switchPage('Pi2')
 })
 const isAbortController = (controller: AbortController|null): controller is AbortController => {
   return !!controller

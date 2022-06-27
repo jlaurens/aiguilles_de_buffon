@@ -1,6 +1,12 @@
 <script lang="ts" setup>
 import { Ref, ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { gsap } from 'gsap'
+const props = defineProps({
+  size: {
+    type: Number,
+    default: 96,
+  }
+})
 const w01  = ref()
 const w02  = ref()
 const w02b = ref()
@@ -217,19 +223,19 @@ const reset_aspect = () => {
 const reset_status = (e: HTMLElement) => {
   e.classList.remove('status1', 'status2', 'status3')
 }
+let color = 'hsl('+360*Math.random()+',66%,50%)'
 const animate_first_line = (duration: number) => {
   var tl = gsap.timeline()
-  var magenta = "rgb(192,0,192)"
   var f_1w = (ew: HTMLElement, label: string) => {
     tl.to(ew, {
-      color: magenta,
-      borderColor: magenta,
+      color: color,
+      borderColor: color,
       duration: duration,
     }, label)
   }
   var f_1n = (en: HTMLElement, label: string) => {
     tl.to(en, {
-      color: magenta,
+      color: color,
       duration: 0,
     }, label)
     tl.to(en, {
@@ -242,7 +248,7 @@ const animate_first_line = (duration: number) => {
   }
   var c  = style_w01__.getPropertyValue('color')
   var bc = style_w01__.getPropertyValue('borderColor')
-  var f_2 = (pw: HTMLElement, pn: HTMLElement, label: string) => {
+  var f_2 = (pw: HTMLElement, _: HTMLElement, label: string) => {
     tl.to(pw, {
       color: c,
       borderColor: bc,
@@ -279,7 +285,7 @@ const animate_hide_words = (duration: number, rs: Ref<HTMLElement>[]) => {
     tl.to(r.value, {
       opacity: 0,
       duration: duration*(1+Math.random())/2,
-      ease:'power1.in',
+      ease:'power1.inOut',
     }, 0)
   }
   return tl
@@ -301,18 +307,18 @@ const animate_other_line = (
   tl.addLabel(label)
   var f_1w = (ew: HTMLElement, label: string) => {
     tl.to(ew, {
-      color: "rgb(192,0,192)",
-      borderColor: "rgb(192,0,192)",
+      color: color,
+      borderColor: color,
       duration: duration,
     }, label)
   }
   var f_1n = (en: HTMLElement, label: string) => {
     tl.to(en, {
-      color: "rgb(192,0,192)",
+      color: color,
       duration: 0,
     }, label)
     tl.to(en, {
-      opacity: "1",
+      opacity: 1,
       duration: duration,
     }, label)
   }
@@ -325,7 +331,7 @@ const animate_other_line = (
     tl.to(pw, {
       color: c,
       borderColor: bc,
-      duration: 2*duration,
+      duration: duration,
     }, label)          
     tl.to(pw, {
       color: '',
@@ -334,7 +340,7 @@ const animate_other_line = (
     if (style_w01__) {
       tl.to(pn, {
         color: style_w01__.getPropertyValue('color'),
-        duration: 2*duration,
+        duration: duration,
       }, label)      
       tl.to(pn, {
         color: '',
@@ -350,7 +356,7 @@ const animate_other_line = (
   for(let e of rns()) {
     f_1n(e, label)
   }
-  tl.to({}, { duration: 2*duration })
+  tl.to({}, { duration: duration })
   label = '3'
   tl.addLabel(label)
   const rng = rns()
@@ -361,7 +367,7 @@ const animate_other_line = (
 }
 const animate_center = (duration: number) => {
   const tl = gsap.timeline()
-  const t = ''+(window.innerHeight/2.5)+'px'
+  const t = (window.innerHeight/2.5-props.size)+'px'
   const f = (en: HTMLElement) => {
     tl.to(en, {
       top: t,
@@ -401,7 +407,7 @@ const animate_place_numbers = (duration: number) => {
   }
   var en: HTMLElement = n31.value
   r = en.getBoundingClientRect()
-  const t = ''+r.top+'px'
+  const t = (r.bottom-props.size)+'px'
   en = n00.value
   en.style.display = 'block'
   en.style.position = 'absolute'
@@ -508,7 +514,7 @@ const animate = () => {
     generator_maker(refs.n3)
   ))
   tl.add(animate_hide_words(2, refs.w_all))
-  tl.to({},{duration:4})
+  tl.to({},{duration:0.5})
   tl.add(animate_place_numbers(2))
   tl.add(animate_center(2))
   poetry_timeline__ = tl
@@ -627,7 +633,7 @@ const reset_layout = () => {
       en.classList.remove('status1', 'status2', 'status3')
     }
     if (height) {
-      position = (top - 0.65 * (bottom - top)-height)+'px'
+      position = (top - props.size - 0.65 * (bottom - top)-height)+'px'
     }
     if (position) {
       for (let e of gwn[1]()) {
@@ -826,8 +832,8 @@ onMounted(() => {
   border-color: rgba(0, 0, 0, 0);
 }
 .verse>span.status1, .verse>span.status2 {
-  color: rgb(192, 0, 192);
-  border-color: rgb(192, 0, 192);
+  color: v-bind(color);
+  border-color: v-bind(color);
 }
 .verse>span.animate_hide_words_1 {
   opacity: 0;
@@ -849,7 +855,7 @@ onMounted(() => {
 }
 .numbers > p.status2 {
   opacity:1;
-  color: rgb(192, 0, 192);
+  color: v-bind(color);
 }
 .numbers > p.status3 {
   opacity:1;

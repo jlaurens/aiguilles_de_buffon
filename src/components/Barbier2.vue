@@ -9,8 +9,8 @@ const viewBox = computed(() => {
   return "0 0 "+w.value+" "+h.value
 })
 const penta_angles = (() => {
-  const alpha = (3+3*Math.random()) * Math.PI/25
-  const beta  = 2 * Math.PI/5 - alpha
+  const alpha = (3 + 4 * Math.random()) * Math.PI / 25
+  const beta  = 2 * Math.PI / 5 - alpha
   const A = new Point(-1,0)
   const C = new Point(1,0)
   const D = A.add(C.subtract(A).rotate(alpha))
@@ -271,129 +271,29 @@ const reuleaux_d = computed(() => {
     + ' Z'
 })
 const tl = gsap.timeline()
-const d1 = ref<HTMLElement>()
-const d1l1 = ref<HTMLElement>()
-const d1l2 = ref<HTMLElement>()
-const d1l3 = ref<HTMLElement>()
-const d1l4 = ref<HTMLElement>()
-const d1l5 = ref<HTMLElement>()
-const d2 = ref<HTMLElement>()
-const d2l1 = ref<HTMLElement>()
+const l1 = ref<HTMLElement>()
+const l2 = ref<HTMLElement>()
+const l3 = ref<HTMLElement>()
+const l4 = ref<HTMLElement>()
+const l5 = ref<HTMLElement>()
 onMounted(() => {
   if (circle.value && square.value && triangle.value && reuleaux.value && penta.value &&
-        d1.value && d1l1.value && d1l2.value && d1l3.value && d1l4.value && d1l5.value &&
-        d2.value && d2l1.value)
+        l1.value && l2.value && l3.value && l4.value && l5.value)
   {
-    // tl.to(circle_s, {
-    //   value: 1,
-    //   duration: 5,
-    //   ease: 'power1.inOut',
-    // })
-    // tl.to(circle_s, {
-    //   value: 0,
-    //   duration: 5,
-    //   ease: 'power1.inOut',
-    // })
-    // tl.to(d1l2.value, {
-    //   opacity: 1,
-    //   duration: 2,
-    // })
-    // tl.to(square.value, {
-    //   opacity: 1,
-    //   duration: 2,
-    // })
-    // tl.to(square_s, {
-    //   value: 1,
-    //   duration: 5,
-    //   ease: 'power1.inOut',
-    // })
-    // tl.to(square_s, {
-    //   value: 0,
-    //   duration: 5,
-    //   ease: 'power1.inOut',
-    // })
-    // tl.to(square.value, {
-    //   opacity: 0,
-    //   duration: 2,
-    // })
-    // tl.to(d1l3.value, {
-    //   opacity: 1,
-    //   duration: 2,
-    // })
-    // tl.to(triangle.value, {
-    //   opacity: 1,
-    //   duration: 2,
-    // }, '<')
-    // tl.to(triangle_s, {
-    //   value: 1,
-    //   duration: 5,
-    //   ease: 'power1.inOut',
-    // })
-    // tl.to(triangle_s, {
-    //   value: 0,
-    //   duration: 5,
-    //   ease: 'power1.inOut',
-    // })
-    // tl.to(d1l4.value, {
-    //   opacity: 1,
-    //   duration: 2,
-    // })
-    // tl.to(reuleaux.value, {
-    //   opacity: 1,
-    //   duration: 2,
-    // })
-    // tl.to(triangle.value, {
-    //   opacity: 0,
-    //   duration: 2,
-    // }, '<')
-    // tl.to(reuleaux_s, {
-    //   value: 1,
-    //   duration: 15,
-    //   ease: 'power1.inOut',
-    // })
-    // tl.to(reuleaux_s, {
-    //   value: 0,
-    //   duration: 5,
-    //   ease: 'power1.inOut',
-    // })
-    tl.to(d1l5.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(penta.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(reuleaux.value, {
-      opacity: 0,
-      duration: 2,
-    }, '<')
-    tl.to(penta_s, {
-      value: 1,
-      duration: 10,
-      ease: 'power1.inOut',
-    })
-    tl.to(penta_s, {
-      value: 0,
-      duration: 10,
-      ease: 'power1.inOut',
-    })
-    tl.to(d1.value, {
-      opacity: 0,
-      duration: 2,
-    })
-    tl.to(d1.value, {
-      display: "none",
-      duration: 0,
-    })
-    tl.to(d1.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(d2.value, {
-      display: "block",
-      duration: 0,
-    })
+    for (let what of [circle.value, square.value, triangle.value, reuleaux.value, penta.value]) {
+      tl.to(what, {
+        opacity: 1,
+        duration: 2,
+        ease: 'power1.inOut',
+      })
+    }
+    for (let what of [circle_s, square_s, triangle_s, reuleaux_s, penta_s]) {
+      tl.to(what, {
+        value: 1,
+        duration: 5,
+        ease: 'power1.inOut',
+      })
+    }
   }
 })
 console.log('ANGLES', penta_angles)
@@ -479,7 +379,7 @@ const penta_s = ref(0)
 const penta_color = ref('hsl('+hues[4]+',66%,50%)')
 const penta = ref<SVGPathElement>()
 const penta_theta = computed(() => {
-  return 2 * Math.PI * penta_s.value * 5 / 4
+  return 2 * Math.PI * penta_s.value
 })
 const penta_min = computed(() => {
   return x_min.value
@@ -510,49 +410,46 @@ const pnt_Ps = computed(() => {
   return penta_Ps(penta_theta.value)
 })
 </script>
-
 <template>
 <div>
   <div class="svg-container">
   <svg ref="svgRoot" version="1.1" :viewBox="viewBox" class="svg-content">
-    <defs ref="svgDefs"></defs>
-    <line x1="0" :y1="y0-2*r" :x2="w" :y2="y0-2*r" stroke="black" class="line top"/>
-    <line x1="0" :y1="y0" :x2="w" :y2="y0" stroke="black" class="line bottom"/>
-    <g  ref="circle">
-      <circle :cx="circle_x" :cy="circle_y" :r="r" class="circle"/>
-      <line :x1="circle_x" :y1="circle_y" :x2="circle_origin.x" :y2="circle_origin.y" class="radius transparent"/>
-      <circle ref="circle_origin" :cx="circle_origin.x" :cy="circle_origin.y" r="5" class="circle_dot"></circle>
-      <line x1="0" :y1="circle_y_min" :x2="w" :y2="circle_y_min" :stroke="circle_color" class="line top"/>
-    </g>
-    <g ref="square" class="hidden" >
-      <polygon :points="square_points" class="square" />  
-      <circle ref="square_origin" :cx="sqr_Ps[0].x" :cy="sqr_Ps[0].y" r="5" class="square_dot"></circle>
-      <line x1="0" :y1="square_y_min" :x2="w" :y2="square_y_min" :stroke="square_color" class="line top"/>
-    </g>
-    <g ref="triangle" class="hidden">
-      <polygon :points="triangle_points" class="triangle"/>
-      <circle ref="triangle_origin" :cx="trngl_Ps[0].x" :cy="trngl_Ps[0].y" r="5" class="triangle_dot"></circle>
-      <line x1="0" :y1="triangle_y_min" :x2="w" :y2="triangle_y_min" :stroke="triangle_color" class="line top"/>
-    </g>
-    <g ref="reuleaux" class="hidden">
-      <path :d="reuleaux_d" class="reuleaux"/>
-      <circle ref="reuleaux_origin" :cx="rlx_Ps[0].x" :cy="rlx_Ps[0].y" r="5" class="reuleaux_dot"></circle>
-      <line x1="0" :y1="reuleaux_y_min" :x2="w" :y2="reuleaux_y_min" :stroke="reuleaux_color" class="line top"/>
-    </g>
-    <g ref="penta" class="hidden">
-      <path :d="penta_d" class="penta"/>
-      <polygon :points="penta_points" ref="pentacle" class="penta transparent" />
-      <circle ref="pentacle_origin" :cx="pnt_Ps[4].x" :cy="pnt_Ps[4].y" r="5" class="penta_dot"></circle>
-      <line x1="0" :y1="penta_y_min" :x2="w" :y2="penta_y_min" :stroke="penta_color" class="line top"/>
-    </g>
-    </svg>
+  <defs ref="svgDefs"></defs>
+  <line x1="0" :y1="y0-2*r" :x2="w" :y2="y0-2*r" stroke="black" class="line top"/>
+  <line x1="0" :y1="y0" :x2="w" :y2="y0" stroke="black" class="line bottom"/>
+  <g  ref="circle">
+    <circle :cx="circle_x" :cy="circle_y" :r="r" class="circle"/>
+    <line :x1="circle_x" :y1="circle_y" :x2="circle_origin.x" :y2="circle_origin.y" class="radius transparent"/>
+    <circle ref="circle_origin" :cx="circle_origin.x" :cy="circle_origin.y" r="5" class="circle_dot"></circle>
+    <line x1="0" :y1="circle_y_min" :x2="w" :y2="circle_y_min" :stroke="circle_color" class="line top"/>
+  </g>
+  <g ref="square" class="hidden" >
+    <polygon :points="square_points" class="square" />  
+    <circle ref="square_origin" :cx="sqr_Ps[0].x" :cy="sqr_Ps[0].y" r="5" class="square_dot"></circle>
+    <line x1="0" :y1="square_y_min" :x2="w" :y2="square_y_min" :stroke="square_color" class="line top"/>
+  </g>
+  <g ref="triangle" class="hidden">
+    <polygon :points="triangle_points" class="triangle"/>
+    <circle ref="triangle_origin" :cx="trngl_Ps[0].x" :cy="trngl_Ps[0].y" r="5" class="triangle_dot"></circle>
+    <line x1="0" :y1="triangle_y_min" :x2="w" :y2="triangle_y_min" :stroke="triangle_color" class="line top"/>
+  </g>
+  <g ref="reuleaux" class="hidden">
+    <path :d="reuleaux_d" class="reuleaux"/>
+    <circle ref="reuleaux_origin" :cx="rlx_Ps[0].x" :cy="rlx_Ps[0].y" r="5" class="reuleaux_dot"></circle>
+    <line x1="0" :y1="reuleaux_y_min" :x2="w" :y2="reuleaux_y_min" :stroke="reuleaux_color" class="line top"/>
+  </g>
+  <g ref="penta" class="hidden">
+    <path :d="penta_d" class="penta"/>
+    <polygon :points="penta_points" ref="pentacle" class="penta transparent" />
+    <circle ref="pentacle_origin" :cx="pnt_Ps[4].x" :cy="pnt_Ps[4].y" r="5" class="penta_dot"></circle>
+    <line x1="0" :y1="penta_y_min" :x2="w" :y2="penta_y_min" :stroke="penta_color" class="line top"/>
+  </g>
+  </svg>
   </div>
-  <div ref="d1">
-    <div ref="d1l1">Une roue ronde tourne entre deux lignes parallèles fixes,</div>
-    <div ref="d1l2" class="hidden">mais pas une roue carré,<span ref="d1l3" class="hidden"> ni une roue triangle,</span></div>
-    <div ref="d1l4" class="hidden">à moins d'arrondir correctement les côtés.</div>
-    <div ref="d1l5" class="hidden">On peut augmenter le nombres de côtés...</div>
-  </div>
+  <div ref="l1">Quelle est la distance parcourue en un tour ?</div>
+  <div ref="l2" class="hidden">mais pas une roue carré,<span ref="l3" class="hidden"> ni une roue triangle,</span></div>
+  <div ref="l4" class="hidden">à moins d'arrondir correctement les côtés.</div>
+  <div ref="l5" class="hidden">On peut augmenter le nombres de côtés...</div>
 </div>
 </template>
 
@@ -578,6 +475,7 @@ left: 0;
 }
 .top {
    stroke-dasharray: 10px;
+   opacity: 0;
 }
 .circle, .radius {
   stroke: v-bind(circle_color);

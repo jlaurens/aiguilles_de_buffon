@@ -9,8 +9,8 @@ const viewBox = computed(() => {
   return "0 0 "+w.value+" "+h.value
 })
 const penta_angles = (() => {
-  const alpha = (3+3*Math.random()) * Math.PI/25
-  const beta  = 2 * Math.PI/5 - alpha
+  const alpha = (3 + 4 * Math.random()) * Math.PI / 25
+  const beta  = 2 * Math.PI / 5 - alpha
   const A = new Point(-1,0)
   const C = new Point(1,0)
   const D = A.add(C.subtract(A).rotate(alpha))
@@ -344,7 +344,7 @@ onMounted(() => {
     }, '<')
     tl.to(reuleaux_s, {
       value: 1,
-      duration: 15,
+      duration: 5,
       ease: 'power1.inOut',
     })
     tl.to(reuleaux_s, {
@@ -366,12 +366,12 @@ onMounted(() => {
     }, '<')
     tl.to(penta_s, {
       value: 1,
-      duration: 10,
+      duration: 2,
       ease: 'power1.inOut',
     })
     tl.to(penta_s, {
       value: 0,
-      duration: 10,
+      duration: 2,
       ease: 'power1.inOut',
     })
   }
@@ -459,7 +459,7 @@ const penta_s = ref(0)
 const penta_color = ref('hsl('+hues[4]+',66%,50%)')
 const penta = ref<SVGPathElement>()
 const penta_theta = computed(() => {
-  return 2 * Math.PI * penta_s.value * 5 / 4
+  return 2 * Math.PI * penta_s.value
 })
 const penta_min = computed(() => {
   return x_min.value

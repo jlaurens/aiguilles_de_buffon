@@ -117,7 +117,7 @@ onMounted(()=>{
     },
     { signal: controller.signal }
   );
-  switchPage('Pi2')
+  switchPage('Barbier2')
 })
 const isAbortController = (controller: AbortController|null): controller is AbortController => {
   return !!controller

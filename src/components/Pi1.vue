@@ -16,6 +16,7 @@ const l5 = ref()
 const l6 = ref()
 const l7 = ref()
 const l8 = ref()
+const l9 = ref()
 const from_alpha = ref()
 const from_bet = ref()
 const to_alpha = ref()
@@ -104,7 +105,7 @@ const animate = (s: number) => {
     color: color,
     duration: 1,
   })
-  for (let l of [l7, l8]) {
+  for (let l of [l7, l9]) {
     tl.to(l.value, {
       opacity: 1,
       duration: 2,
@@ -139,7 +140,10 @@ onMounted(() => {
       c'est la première lettre du mot grec <span class="greek shadow" ref="perimetros">περίμετρος</span>
       <br><span class="hidden" ref="l7">qu'on prononce «périmétros»</span>
       <br><span class="hidden" ref="l8">
-      et qui désigne le <span class="colored">périmètre</span> !
+      et qui désigne le <span class="colored">périmètre</span>,
+      </span>
+      <br><span class="hidden" ref="l9">
+      c'est-à-dire la longueur du tour.
       </span>
     </div>
   </div>

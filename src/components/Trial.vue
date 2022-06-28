@@ -11,9 +11,9 @@ const trial_store = useTrialStore()
 const COLOR_RANGE = 30;
 const PARQUET_COUNT = 6;
 const PIN_RATIO = 4;
-const PI_expected = 3.1415926535;
-
 const goodColor = ref('')
+
+const PI_expected = 3.1415926535;
 
 const to_digits = (x: number): number[] => {
   const n = Math.floor(x)
@@ -90,15 +90,6 @@ onMounted(() => {
 const ratio = ref(0)
 var ratio_ra = ref<number[]>([])
 var good_ra: boolean[] = []
-watch(ratio_ra, (old_ra: number[], new_ra: number[]) => {
-  const ra: boolean[] = []
-  var torf = true
-  new_ra && new_ra.forEach((x, i) => {
-    torf = torf && x == PI_ra[i]
-    ra.push(torf)
-  })
-  good_ra = ra
-})
 const throw_one_pin = (w: number, h: number, ctx?: CanvasRenderingContext2D) => {
   var ans = false
   var M = [
@@ -174,6 +165,13 @@ const throw_pins = (j?: number) => {
         } else {
           ratio_ra.value = []
         }
+        const ra: boolean[] = []
+        var torf = true
+        ratio_ra.value.forEach((x, i) => {
+          torf = torf && x == PI_ra[i]
+          ra.push(torf)
+        })
+        good_ra = ra
         setTimeout(f, 125)
       }
       f_1()

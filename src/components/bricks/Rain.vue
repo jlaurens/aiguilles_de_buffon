@@ -128,7 +128,7 @@ class DropBase {
     public cy = Math.random() * window.innerHeight,
     id?: string
   ) {
-    let NS = 'http://www.w3.org/2000/svg'
+    const NS = 'http://www.w3.org/2000/svg'
     if (!id) {
       id = 'drop' + Math.floor(Math.random() * 1000000)
       let gradient = document.createElementNS(NS,'radialGradient')

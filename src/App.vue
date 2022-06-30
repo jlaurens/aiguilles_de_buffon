@@ -34,11 +34,12 @@ const page = ref('NONE')
 const trialIsOn = ref(false)
 const qrIsOn = ref(false)
 const title_by_name = {
+  'Game': 'Le jeux des aiguilles',
   'Pi1': 'Savez-vous parler grec ?',
   'Pi2': 'Combien vaut π',
-  'Game': 'Le jeux des aiguilles',
   'Barbier1': 'Des roues pas vraiment rondes',
   'Barbier2': 'Des roues qui avancent pareil',
+  'Trial': 'Simulation de lancers',
   'Menu': 'Les aiguilles de Buffon',
 }
 const title = ref(title_by_name['Menu'])
@@ -138,10 +139,11 @@ const resizeListener = () => {
   || 1.1 * newFontSize <= fontSize ) {
     body.style.fontSize = newFontSize+'px'
   }
-  trial.value && trial.value.resizeListener()
-  rain.value  && rain.value.resizeListener()
-  pi2.value && pi2.value.resizeListener()
-  barbier1.value && barbier1.value.resizeListener()
+  trial.value?.resizeListener()
+  rain.value?.resizeListener()
+  pi2.value?.resizeListener()
+  barbier1.value?.resizeListener()
+  game.value?.resizeListener()
 }
 onMounted(() => {
   window.addEventListener('resize', resizeListener)
@@ -174,6 +176,11 @@ const isPage = (s: string): boolean => {
 const height = computed(() => {
   return 3*window.innerHeight/24
 })
+type key_t = keyof typeof title_by_name
+
+const items: Array<[key_t, String]> = ['Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbier2', 'Trial'].map(
+  (k) => { return [k, title_by_name[k as key_t]] }
+) as unknown as Array<[key_t, String]>
 </script>
 <template>
   <Trial ref="trial" />
@@ -195,7 +202,7 @@ const height = computed(() => {
       @enter='enter'
       v-if="menuIsOn"
     >
-      <Menu @on-selected="switchPage"></Menu>
+      <Menu @on-selected="switchPage" :items="items"></Menu>
     </Transition>
     <Transition
       name='fade'
@@ -298,5 +305,11 @@ body {
 .qrcode-help {
   position: relative;
   color: rgba(0,0,0,0.1);
+}
+@media only screen and (orientation:portrait) {
+  body {
+    height: 100vw;
+    transform: rotate(90deg);
+  }
 }
 </style>

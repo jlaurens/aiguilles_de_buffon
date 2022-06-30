@@ -1,34 +1,63 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
+
+const props = defineProps({
+  items: {
+    type: Array<[String, String]>,
+    default: [['FOO', 'BAR']],
+  }
+})
 defineEmits([
   'onSelected'
 ])
+const color = ref('')
+onMounted(() => {
+  color.value  = 'hsl('+(360*Math.random())+',66%,50%)'
+})
 </script>
 
 <template>
-  <div class="menu">
-    <ul class="menu">
-      <li class="menu" @click="$emit('onSelected','Game')">Le jeu des aiguilles</li>
-      <li class="menu" @click="$emit('onSelected','Pi1')">Combien vaut π ?</li>
-      <li class="menu" @click="$emit('onSelected','Barbier1')">Des cercles pas très ronds</li>
-      <li class="menu" @click="$emit('onSelected','Trial')">Tirages</li>
-    </ul>
+  <div class="center_h">
+    <div class="center_v">
+      <div class="menu">
+        <div v-for="item in props.items" @click="$emit('onSelected',item[0])" class="item">{{item[1]}}</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-ul.menu {
-  margin-block-start:0.1em;
-  margin-block-end:0.1em;
-  padding-inline-start: 4em;
-  text-align: left;
+.center_v {
+  height:100%;
+  display:flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: space-around;
 }
-li.menu {
+.center_h {
+  height:100%;
+  width:100%;
+  display:flex;
+  align-items: left;
+  justify-content: space-around;
+}
+.menu {
   cursor: pointer;
   padding-left:10px;
   padding-right:10px;
+  text-align: left;
 }
-li.menu:hover {
-  color: rgb(192,0,192);
+.item {
+  padding-left: 1.5em;
+}
+.item:before {
+  content: '>';
+  position: relative;
+  left: -1em;  /* place the SVG at the start of the padding */
+  width: 1em;
+}
+.item:hover {
+  color: v-bind('color');
 }
 .fade-enter-active,
 .fade-leave-active {
@@ -37,5 +66,8 @@ li.menu:hover {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+.bullet {
+  z-index: 2000;
 }
 </style>

@@ -46,6 +46,6 @@ let path = (image?: string): string => {
 }
 .icon:hover {
   background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 0.2ex;
+  border-radius: 0.75ex;
 }
 </style>

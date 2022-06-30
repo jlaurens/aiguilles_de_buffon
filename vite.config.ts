@@ -7,6 +7,9 @@ import * as path from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   base: process.env.ELECTRON=="true" ? './' : "",
+  build: {
+    outDir: '../buffon/docs',
+  },
   plugins: [vue()],
   css: {
     preprocessorOptions: {

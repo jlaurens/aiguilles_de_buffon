@@ -40,12 +40,11 @@ const hPadding = computed(() =>{
 </script>
 
 <template>
-<div
-  class="slide"
-  :style="style"
->
-  <slot></slot>
-</div>
+  <div class="slide" :style="style">
+    <div class="slide-container">
+      <slot></slot>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -55,5 +54,10 @@ const hPadding = computed(() =>{
   left: v-bind('hPadding');
   bottom: v-bind('vPadding');
   right:  v-bind('hPadding');
+}
+.slide-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -18,7 +18,6 @@ const props = defineProps({
 <template>
 <div class="toolbar">
   <div class="horizontal">
-
     <slot></slot>
   </div>
 </div>

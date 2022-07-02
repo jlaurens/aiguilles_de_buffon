@@ -20,7 +20,7 @@ onMounted(() => {
   <div class="center_h">
     <div class="center_v">
       <div class="menu">
-        <div v-for="item in props.items" @click="$emit('onSelected',item[0])" class="item">{{item[1]}}</div>
+        <div v-for="item in props.items" @click="$emit('onSelected',item[0])" class="item" v-html="item[1]"></div>
       </div>
     </div>
   </div>

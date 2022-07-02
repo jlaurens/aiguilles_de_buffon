@@ -235,11 +235,11 @@ defineExpose({ show, toggleRun, accelerate, decelerate, resizeListener })
 
 <template>
 <Slide :z-index='-1000' :bg-name="parquet">
-  <Title>
+  <Title :night="true">
     <p class="trial-title"><span class="trial-digit">{{pin_count}}</span> aiguilles,
       <span class="trial-digit">{{pin_cross_count}}</span> sur une ligne</p>
     <p class="trial-title trial-digit" :if="pin_cross_count>0">
-      &pi; &simeq; <span class="trial-digit">{{pin_count}}</span>/<span class="trial-digit">{{pin_cross_count}}</span>
+      <span class="greek">π</span> &simeq; <span class="trial-digit">{{pin_count}}</span>÷<span class="trial-digit">{{pin_cross_count}}</span>
       &simeq; <span class="trial-span">
       <span class="trial-expected" :style="expectedStyle">
         <span class="trial-digit">{{''+PI_ra[0]}}</span>
@@ -262,23 +262,6 @@ defineExpose({ show, toggleRun, accelerate, decelerate, resizeListener })
 </template>
 
 <style scoped>
-.trial   {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  bottom: 0px;
-  right: 0px;
-}
-h1 {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  margin-top: 0px;
-  background-color: #eee;
-  padding: 2px 4px;
-  color: #304455;
-}
 .trial-title {
   font-family: VictorMono-Italic, JetBrainsMono, monospace;
   margin:10px;
@@ -306,5 +289,8 @@ canvas.trial-canvas {
 }
 .trial-digit {
   font-family: VictorMono-Regular, JetBrainsMono, monospace;
+}
+.greek {
+  color: v-bind('goodColor');
 }
 </style>

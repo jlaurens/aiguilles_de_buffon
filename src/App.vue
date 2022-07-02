@@ -6,6 +6,7 @@
 import { gsap } from 'gsap'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useTrialStore } from './stores/trial'
+import { useMainStore } from './stores/main'
 import Icon from './components/bricks/Icon.vue'
 import Title from './components/bricks/Title.vue'
 import Slide from './components/bricks/Slide.vue'
@@ -19,6 +20,7 @@ import Pi2 from './components/Pi2.vue'
 import Game from './components/Game.vue'
 import Barbier1 from './components/Barbier1.vue'
 import Barbier2 from './components/Barbier2.vue'
+const mainStore = useMainStore()
 const rain = ref()
 const rainIsOn = ref(true)
 const pi1 = ref()
@@ -36,7 +38,7 @@ const qrIsOn = ref(false)
 const title_by_name = {
   'Game': 'Le jeux des aiguilles',
   'Pi1': 'Savez-vous parler grec ?',
-  'Pi2': 'Combien vaut π',
+  'Pi2': 'Combien vaut <span class="greek">π</span>',
   'Barbier1': 'Des roues pas vraiment rondes',
   'Barbier2': 'Des roues qui avancent pareil',
   'Trial': 'Simulation de lancers',
@@ -92,7 +94,7 @@ const switchPage = (name: string) => {
       break
   }
 }
-const main_store = useTrialStore()
+const trialStore = useTrialStore()
 if (Menu && Pi1) {}
 var controller: AbortController|null
 onMounted(()=>{
@@ -118,7 +120,7 @@ onMounted(()=>{
     },
     { signal: controller.signal }
   );
-  switchPage('Game')
+  switchPage('Barbier2')
 })
 const isAbortController = (controller: AbortController|null): controller is AbortController => {
   return !!controller
@@ -133,12 +135,12 @@ const resizeListener = () => {
   var fontSize = parseFloat(style.getPropertyValue('font-size'))
   const width = window.innerWidth;
   const height = window.innerHeight;
-  console.log("width, height", width, height, fontSize)
   var newFontSize = Math.max(40, height/16)
   if (newFontSize >= 1.1 * fontSize
   || 1.1 * newFontSize <= fontSize ) {
     body.style.fontSize = newFontSize+'px'
   }
+  mainStore.setFooterSize(3*window.innerHeight/24)
   trial.value?.resizeListener()
   rain.value?.resizeListener()
   pi2.value?.resizeListener()
@@ -147,6 +149,7 @@ const resizeListener = () => {
 }
 onMounted(() => {
   window.addEventListener('resize', resizeListener)
+  resizeListener()
 })
 onUnmounted(() => {
   window.removeEventListener('resize', resizeListener)
@@ -194,7 +197,7 @@ const items: Array<[key_t, String]> = ['Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbie
     </QR>
   </Transition>
   <Slide v-if="!trialIsOn" :z-index="1000">
-    <Title>{{title}}</Title>
+    <Title><span v-html="title"></span></Title>
     <Slide :v-padding="height" :z-index="1000">
     <Transition
       :css='false'
@@ -208,39 +211,39 @@ const items: Array<[key_t, String]> = ['Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbie
       name='fade'
       v-else-if="isPage('Pi1')"
     >
-      <Pi1 ref="pi1"></Pi1>
+      <Pi1 ref="pi1" :auto-start="true"></Pi1>
     </Transition>
     <Transition
       name='fade'
       v-else-if="isPage('Pi2')"
     >
-      <Pi2 ref="pi2"></Pi2>
+      <Pi2 ref="pi2" :auto-start="true"></Pi2>
     </Transition>
     <Transition
       name='fade'
       v-else-if="isPage('Barbier1')"
     >
-      <Barbier1 ref="barbier1"></Barbier1>
+      <Barbier1 ref="barbier1" :auto-start="true"></Barbier1>
     </Transition>
     <Transition
       name='fade'
       v-else-if="isPage('Barbier2')"
     >
-      <Barbier2 ref="barbier2"></Barbier2>
+      <Barbier2 ref="barbier2" :auto-start="true"></Barbier2>
     </Transition>
     <Transition
       name='fade'
       v-else-if="isPage('Game')"
     >
-      <Game ref="game"></Game>
+      <Game ref="game" :auto-start="true"></Game>
     </Transition>
     </Slide>
   </Slide>
-  <Toolbar>
-    <Icon image="menu_dots.png" @click="switchPage('Menu')"/>
-    <Icon image="logo_IMB.png" @click="switchPage('IMB')"/>
-    <Icon image="logo-uB-filet.png" @click="switchPage('uB')"/>
-    <Icon image="logo_CNRS.png" @click="switchPage('CNRS')"/>
+  <Toolbar :height="height">
+    <Icon image="menu_dots.png" @click="switchPage('Menu')" :size="height"/>
+    <Icon image="logo_IMB.png" @click="switchPage('IMB')" :size="height"/>
+    <Icon image="logo-uB-filet.png" @click="switchPage('uB')" :size="height"/>
+    <Icon image="logo_CNRS.png" @click="switchPage('CNRS')" :size="height"/>
   </Toolbar>
 </template>
 
@@ -248,6 +251,10 @@ const items: Array<[key_t, String]> = ['Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbie
 @font-face {
   font-family: LifeSavers;
   src: url('./fonts/LifeSavers-Bold.woff') format('woff');
+}
+@font-face {
+  font-family: LifeSaversBold;
+  src: url('./fonts/LifeSavers-ExtraBold.woff') format('woff');
 }
 @font-face {
   font-family: JetBrainsMono;
@@ -294,6 +301,9 @@ body {
   color: #594471;
   background-color:white;
 }
+b {
+  font-family: LifeSaversBold, sans-serif;
+}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 2s ease;
@@ -311,5 +321,8 @@ body {
     height: 100vw;
     transform: rotate(90deg);
   }
+}
+.greek {
+  font-family: IBMPlexSans-Regular, sans-serif;
 }
 </style>

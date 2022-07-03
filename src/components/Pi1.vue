@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Slide from './bricks/Slide.vue'
 import { ref, onMounted } from 'vue'
-import { gsap } from 'gsap'
+import { gsap, Power1 } from 'gsap'
 const props = defineProps({
   size: {
     type: Number,
@@ -61,32 +61,32 @@ const animate = (s: number) => {
   tl.to(alpha_el, {
     top: (from_alpha.value.getBoundingClientRect().top-props.size+window.innerHeight/8) + 'px',
     duration: 1,
-    ease:'power1.inout',
+    ease: Power1.easeInOut,
   })
   tl.to(bet_el, {
     top: (from_bet.value.getBoundingClientRect().top-props.size+window.innerHeight/8) + 'px',
     duration: 1,
-    ease:'power1.inout',
+    ease: Power1.easeInOut,
   })
   tl.to(alpha_el, {
     left: to_alpha.value.getBoundingClientRect().left + 'px',
     duration: 1,
-    ease:'power1.inout',
+    ease: Power1.easeInOut,
   }, 'X')
   tl.to(bet_el, {
     left: to_bet.value.getBoundingClientRect().left + 'px',
     duration: 1,
-    ease:'power1.inout',
+    ease: Power1.easeInOut,
   }, '<')
  tl.to(alpha_el, {
     top: (to_alpha.value.getBoundingClientRect().top-props.size) + 'px',
     duration: 1,
-    ease:'power1.inout',
+    ease: Power1.easeInOut,
   })
   tl.to(bet_el, {
     top: (to_bet.value.getBoundingClientRect().top-props.size) + 'px',
     duration: 1,
-    ease:'power1.inout',
+    ease: Power1.easeInOut,
   }, '<')
   tl.to(l4.value, {
     opacity:1,

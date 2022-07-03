@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Ref, ref, onMounted, onUnmounted, nextTick } from 'vue'
-import { gsap } from 'gsap'
+import { gsap, Power1 } from 'gsap'
 const props = defineProps({
   size: {
     type: Number,
@@ -203,7 +203,7 @@ const timeline_hide_words = (duration: number, rs: Ref<HTMLElement>[]) => {
     tl.to(r.value!, {
       opacity: 0,
       duration: duration*(1+2*Math.random())/2,
-      ease:'power1.inOut',
+      ease:Power1.easeInOut,
     }, 0)
   }
   return tl
@@ -286,7 +286,7 @@ const timeline_center = (duration: number) => {
     tl.to(en, {
       top: t,
       duration: duration,
-      ease: 'power1.inOut',
+      ease: Power1.easeInOut,
     }, 0)
   }
   for (let r of refs.n_all) {
@@ -295,7 +295,7 @@ const timeline_center = (duration: number) => {
   tl.to(n31b.value!, {
     opacity: 1,
     duration: duration,
-    ease: 'power1.in',
+    ease: Power1.easeIn,
   }, 0)
   return tl
 }
@@ -334,7 +334,7 @@ const timeline_place_numbers = (duration: number) => {
   tl.to(en, {
     opacity: 1,
     duration: duration,
-    ease: 'power1.in',
+    ease: Power1.easeIn,
   })
   en = n00b.value!
   en.style.display = 'block'
@@ -348,7 +348,7 @@ const timeline_place_numbers = (duration: number) => {
   tl.to(en, {
     opacity: 1,
     duration: duration,
-    ease: 'power1.in',
+    ease: Power1.easeIn,
   })
   e1.style.zIndex = '1099'
   tl.to(e1, {
@@ -356,7 +356,7 @@ const timeline_place_numbers = (duration: number) => {
     top: t,
     left: l+'px',
     duration: duration,
-    ease: 'power1.inOut',
+    ease: Power1.easeInOut,
   })
   en = n01b.value!
   en.style.display = 'block'
@@ -370,7 +370,7 @@ const timeline_place_numbers = (duration: number) => {
   tl.to(en, {
     opacity: 1,
     duration: duration,
-    ease: 'power1.in',
+    ease: Power1.easeIn,
   }, "<33%")
   var i = 0
   for (let r of refs.n) {
@@ -382,7 +382,7 @@ const timeline_place_numbers = (duration: number) => {
         color: colors[en.textContent || ''],
         left: (l+i*w)+'px',
         duration: duration,
-        ease: 'power1.inOut',
+        ease: Power1.easeInOut,
       }, ">-="+(33+(i-2)/29*67)+"%")
     }
     ++i

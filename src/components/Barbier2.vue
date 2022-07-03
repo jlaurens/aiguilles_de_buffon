@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, nextTick, computed, onMounted } from 'vue'
-import { gsap } from 'gsap'
+import { gsap, Power1 } from 'gsap'
 import { Point, Angle } from '@mathigon/euclid'
 import { useMainStore } from '../stores/main'
 const mainStore = useMainStore()
@@ -512,14 +512,14 @@ const timeline = (): gsap.core.Timeline => {
       return {
         opacity: level,
         duration: 1,
-        ease: 'power1.inOut',
+        ease: Power1.easeInOut,
       }
     }
     const f1 = (what: gsap.TweenTarget, what_s: gsap.TweenTarget, position='+=2') => {
       tl.to(what, opacity(1)).to(what_s, {
         value: 1,
         duration: 5,
-        ease: 'power1.inOut',
+        ease: Power1.easeInOut,
       }, position)
     }
     f1(square.value!, square_s)
@@ -567,8 +567,8 @@ defineExpose({ timeline, resizeListener })
       <span ref="B3" class="hidden penta">«Pentarond» : 3,14...</span>
     </div>
     <div ref="C" class="absolute">
-      <div ref="C1" class="hidden">Une roue de <b>diamètre constant d</b> parcourt en un tour <span class="greek">π×</span><b>d</b></div>
-      <div ref="C2" class="hidden">J.-É. Barbier a découvert ce théorème mathématique en étudiant les aiguilles de Buffon</div>
+      <div ref="C1" class="hidden">Une roue de <b>diamètre constant d</b> avance de <span class="greek">π×</span><b>d</b> à chaque tour</div>
+      <div ref="C2" class="hidden">J.-É. Barbier a découvert ce théorème mathématique<br/> en étudiant les aiguilles de Buffon</div>
     </div>
   </div>
   <div ref="svgContainer" class="svg-container">

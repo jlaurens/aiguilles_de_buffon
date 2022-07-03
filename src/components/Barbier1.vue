@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { gsap } from 'gsap'
+import { gsap, Power1 } from 'gsap'
 import { Point, Angle } from '@mathigon/euclid'
 const w = ref(0), h = ref(0)
 const svgRoot = ref<SVGElement>()
@@ -323,12 +323,12 @@ const timeline = () => {
     tl.to(circle_s, {
       value: 1,
       duration: 5,
-      ease: 'power1.inOut',
+      ease: Power1.easeInOut,
     })
     tl.to(circle_s, {
       value: 0,
       duration: 5,
-      ease: 'power1.inOut',
+      ease: Power1.easeInOut,
     })
     tl.to(l2.value, {
       opacity: 1,
@@ -341,12 +341,12 @@ const timeline = () => {
     tl.to(square_s, {
       value: 1,
       duration: 5,
-      ease: 'power1.inOut',
+      ease: Power1.easeInOut,
     })
     tl.to(square_s, {
       value: 0,
       duration: 5,
-      ease: 'power1.inOut',
+      ease: Power1.easeInOut,
     })
     tl.to(square.value, {
       opacity: 0,
@@ -363,12 +363,12 @@ const timeline = () => {
     tl.to(triangle_s, {
       value: 1,
       duration: 5,
-      ease: 'power1.inOut',
+      ease: Power1.easeInOut,
     })
     tl.to(triangle_s, {
       value: 0,
       duration: 5,
-      ease: 'power1.inOut',
+      ease: Power1.easeInOut,
     })
     tl.to(l4.value, {
       opacity: 1,
@@ -385,12 +385,12 @@ const timeline = () => {
     tl.to(reuleaux_s, {
       value: 1,
       duration: 5,
-      ease: 'power1.inOut',
+      ease: Power1.easeInOut,
     })
     tl.to(reuleaux_s, {
       value: 0.45,
       duration: 2.5,
-      ease: 'power1.inOut',
+      ease: Power1.easeInOut,
     })
     tl.to(l5.value, {
       opacity: 1,
@@ -403,7 +403,7 @@ const timeline = () => {
     tl.to(penta_s, {
       value: 1,
       duration: 4,
-      ease: 'power1.inOut',
+      ease: Power1.easeInOut,
     })
     tl.to(A.value, {
       opacity: 0,

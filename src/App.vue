@@ -13,22 +13,25 @@ import Slide from './components/bricks/Slide.vue'
 import Toolbar from './components/bricks/Toolbar.vue'
 import Rain from './components/bricks/Rain.vue'
 import QR from './components/bricks/QR.vue'
-import Trial from './components/Trial.vue'
 import Menu from './components/Menu.vue'
+import Start from './components/Start.vue'
+import Game from './components/Game.vue'
 import Pi1 from './components/Pi1.vue'
 import Pi2 from './components/Pi2.vue'
-import Game from './components/Game.vue'
 import Barbier1 from './components/Barbier1.vue'
 import Barbier2 from './components/Barbier2.vue'
+import Trial from './components/Trial.vue'
+import About from './components/About.vue'
 const mainStore = useMainStore()
 const rain = ref()
 const rainIsOn = ref(true)
+const start = ref()
+const game = ref()
 const pi1 = ref()
 const pi2 = ref()
-const game = ref()
-const trial = ref()
 const barbier1 = ref()
 const barbier2 = ref()
+const trial = ref()
 const panel = ref(null as any)
 panel.value = Menu
 const menuIsOn = ref(true)
@@ -36,12 +39,14 @@ const page = ref('NONE')
 const trialIsOn = ref(false)
 const qrIsOn = ref(false)
 const title_by_name = {
+  'Start': 'Commencer',
   'Game': 'Le jeux des aiguilles',
   'Pi1': 'Savez-vous parler grec ?',
   'Pi2': 'Combien vaut <span class="greek">π</span>',
   'Barbier1': 'Des roues pas vraiment rondes',
   'Barbier2': 'Des roues qui avancent pareil',
   'Trial': 'Simulation de lancers',
+  'About': 'À propos',
   'Menu': 'Les aiguilles de Buffon',
 }
 const title = ref(title_by_name['Menu'])
@@ -62,11 +67,13 @@ const switchPage = (name: string) => {
     case 'IMB':
       qr(name)
       break
+    case 'Start':
+    case 'Game':
     case 'Pi1':
     case 'Pi2':
-    case 'Game':
     case 'Barbier1':
     case 'Barbier2':
+    case 'About':
       title.value = title_by_name[name]
       page.value = name
       menuIsOn.value = false
@@ -76,7 +83,7 @@ const switchPage = (name: string) => {
       trial.value && trial.value.show(false)
       break
     case 'Trial':
-      title.value = ''
+      title.value = title_by_name[name]
       page.value = name
       trial.value && trial.value.show(true)
       menuIsOn.value = false
@@ -120,7 +127,7 @@ onMounted(()=>{
     },
     { signal: controller.signal }
   );
-  switchPage('Barbier2')
+  switchPage('Start')
 })
 const isAbortController = (controller: AbortController|null): controller is AbortController => {
   return !!controller
@@ -181,7 +188,7 @@ const height = computed(() => {
 })
 type key_t = keyof typeof title_by_name
 
-const items: Array<[key_t, String]> = ['Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbier2', 'Trial'].map(
+const items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbier2', 'Trial', 'About'].map(
   (k) => { return [k, title_by_name[k as key_t]] }
 ) as unknown as Array<[key_t, String]>
 </script>
@@ -196,7 +203,21 @@ const items: Array<[key_t, String]> = ['Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbie
       <div class="qrcode-help">Cliquer l'image pour fermer</div>
     </QR>
   </Transition>
-  <Slide v-if="!trialIsOn" :z-index="1000">
+  <Slide v-if="isPage('Start')" :z-index="1000">
+    <Transition
+      name='fade'
+    >
+      <Start ref="start" :auto-start="true"></Start>
+    </Transition>
+  </Slide>
+  <Slide v-else-if="isPage('About')" :z-index="1000">
+    <Transition
+      name='fade'
+    >
+      <About ref="about" :auto-start="true"></About>
+    </Transition>
+  </Slide>
+  <Slide v-else-if="!trialIsOn" :z-index="1000">
     <Title><span v-html="title"></span></Title>
     <Slide :v-padding="height" :z-index="1000">
     <Transition
@@ -236,6 +257,12 @@ const items: Array<[key_t, String]> = ['Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbie
       v-else-if="isPage('Game')"
     >
       <Game ref="game" :auto-start="true"></Game>
+    </Transition>
+    <Transition
+      name='fade'
+      v-else-if="isPage('Start')"
+    >
+      <Start ref="start" :auto-start="true"></Start>
     </Transition>
     </Slide>
   </Slide>

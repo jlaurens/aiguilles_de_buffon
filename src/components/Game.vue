@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { gsap } from 'gsap'
+import { gsap, Power1 } from 'gsap'
 import MiniBoardVue from './bricks/MiniBoard.vue';
 
 const props = defineProps({
@@ -64,7 +64,7 @@ const timeline = () => {
       return {
         duration: duration,
         value: level,
-        ease: 'power1.inOut',
+        ease: Power1.easeInOut,
       }
     }
     for (let what of [A1, A2, A3]) {

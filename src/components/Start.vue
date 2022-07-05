@@ -13,8 +13,8 @@ const A1 = ref<HTMLElement>()
 const A2 = ref<HTMLElement>()
 const A3 = ref<HTMLElement>()
 const A4 = ref<HTMLElement>()
-const timeline = () => {
-  const tl = gsap.timeline()
+const timeline = (vars?: gsap.TimelineVars) => {
+  const tl = gsap.timeline(vars)
   if ( content.value && A1.value && A2.value && A3.value && A4.value ) {
     for (let what of [A1, A2, A3, A4]) {
         tl.to(what.value!, {
@@ -31,8 +31,15 @@ const timeline = () => {
   }
   return tl
 }
+const $emit = defineEmits([
+  'mounted'
+])
 onMounted(() => {
-  props.autoStart && timeline()
+  if (props.autoStart) {
+    timeline()
+  } else {
+    $emit('mounted', timeline, 'Start')
+  }
 })
 </script>
 

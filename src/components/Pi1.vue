@@ -1,12 +1,15 @@
 <script lang="ts" setup>
-import Slide from './bricks/Slide.vue'
 import { ref, onMounted } from 'vue'
 import { gsap, Power1 } from 'gsap'
 const props = defineProps({
+  autoStart: {
+    type: Boolean,
+    default: false,
+  },
   size: {
     type: Number,
     default: 96,
-  }
+  },
 })
 const l1 = ref()
 const l2 = ref()
@@ -30,8 +33,8 @@ const opacity = (opacity: number, duration = 2) => {
     opacity, duration, ease: Power1.easeInOut,
   }
 }
-const animate = (s: number) => {
-  const tl = gsap.timeline()
+const timeline = (vars?: gsap.TimelineVars) => {
+  const tl = gsap.timeline(vars)
   for (let l of [l1, l2, l3]) {
     tl.to(l.value, opacity(1, 2), '+=0.5')
   }
@@ -94,11 +97,17 @@ const animate = (s: number) => {
       duration: 0.5,
     })
   }
+  return tl
 }
+const $emit = defineEmits([
+  'mounted'
+])
 onMounted(() => {
-  setTimeout(() => {
-    animate(10)
-  }, 500);
+  if (props.autoStart) {
+    timeline()
+  } else {
+    $emit('mounted', timeline, 'Pi1')
+  }
 })
 </script>
 

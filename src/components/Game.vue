@@ -7,7 +7,7 @@ const props = defineProps({
   autoStart: {
     type: Boolean,
     default: false,
-  }
+  },
 })
 const miniBoard = ref()
 const A  = ref<HTMLElement>()
@@ -104,11 +104,18 @@ const resizeListener = () => {
   r.value = height.value / 4
   miniBoard.value?.resizeListener()
 }
-defineExpose({ resizeListener, timeline })
+defineExpose({ resizeListener })
 onMounted(() => {
   resizeListener()
-  props.autoStart && timeline()
+  if (props.autoStart) {
+    timeline()
+  } else {
+    $emit('mounted', timeline, 'Game')
+  }
 })
+const $emit = defineEmits([
+  'mounted'
+])
 </script>
 
 <template>

@@ -32,12 +32,15 @@ const pi2 = ref()
 const barbier1 = ref()
 const barbier2 = ref()
 const trial = ref()
+const about = ref()
 const panel = ref(null as any)
 panel.value = Menu
 const menuIsOn = ref(true)
 const page = ref('NONE')
 const trialIsOn = ref(false)
 const qrIsOn = ref(false)
+const autoStart = ref(false)
+const names = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbier2', 'About']
 const title_by_name = {
   'Start': 'Commencer',
   'Game': 'Le jeux des aiguilles',
@@ -75,6 +78,10 @@ const switchPage = (name: string) => {
     case 'Barbier1':
     case 'Barbier2':
     case 'About':
+      if (title.value != name && currentTimeline) {
+        currentTimeline.kill()
+        currentTimeline = undefined
+      }
       title.value = title_by_name[name]
       page.value = name
       menuIsOn.value = false
@@ -105,6 +112,7 @@ const switchPage = (name: string) => {
 const trialStore = useTrialStore()
 if (Menu && Pi1) {}
 var controller: AbortController|null
+const tl = gsap.timeline()
 onMounted(()=>{
   controller = new AbortController();
   document.addEventListener(
@@ -128,7 +136,6 @@ onMounted(()=>{
     },
     { signal: controller.signal }
   );
-  switchPage('About')
 })
 const isAbortController = (controller: AbortController|null): controller is AbortController => {
   return !!controller
@@ -192,6 +199,42 @@ type key_t = keyof typeof title_by_name
 const items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbier2', 'Trial', 'About'].map(
   (k) => { return [k, title_by_name[k as key_t]] }
 ) as unknown as Array<[key_t, String]>
+
+onMounted (() => {
+  switchPage('Game')
+})
+const nextPage = (name: string) => {
+  return {
+    Start: 'Game',
+    Game: 'Pi1',
+    Pi1: 'Pi2',
+    Pi2: 'Barbier1',
+    Barbier1: 'Barbier2',
+    Barbier2: 'About',
+    About: 'Start',
+  } [name] || 'Start'
+}
+let currentTimeline: gsap.core.Timeline | undefined
+const registerTimeline = (tl: (vars?: gsap.TimelineVars) => gsap.core.Timeline, name: string) => {
+  console.log('FROM', name, 'TO', nextPage(name))
+  if (currentTimeline) {
+    currentTimeline.restart()
+  } else {
+    currentTimeline = gsap.timeline({
+      onComplete () {
+        console.log('COMPLETE', name)
+        switchPage(nextPage(name))
+      }
+    })
+    currentTimeline.add(tl({
+      duration: 3,
+    }))
+    currentTimeline.call(() => {
+      console.log('WRAPPER DONE', name)
+    })
+    currentTimeline.duration(5)
+  }
+}
 </script>
 <template>
   <Trial ref="trial" />
@@ -208,7 +251,7 @@ const items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1'
     <Transition
       name='fade'
     >
-      <Start ref="start" :auto-start="true"></Start>
+      <Start ref="start" :auto-start="autoStart" @mounted="registerTimeline"></Start>
     </Transition>
   </Slide>
   <Slide v-else-if="!trialIsOn" :z-index="1000">
@@ -226,37 +269,37 @@ const items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1'
       name='fade'
       v-else-if="isPage('Pi1')"
     >
-      <Pi1 ref="pi1" :auto-start="true"></Pi1>
+      <Pi1 ref="pi1" :auto-start="autoStart" @mounted="registerTimeline"></Pi1>
     </Transition>
     <Transition
       name='fade'
       v-else-if="isPage('Pi2')"
     >
-      <Pi2 ref="pi2" :auto-start="true"></Pi2>
+      <Pi2 ref="pi2" :auto-start="autoStart" @mounted="registerTimeline"></Pi2>
     </Transition>
     <Transition
       name='fade'
       v-else-if="isPage('Barbier1')"
     >
-      <Barbier1 ref="barbier1" :auto-start="true"></Barbier1>
+      <Barbier1 ref="barbier1" :auto-start="autoStart" @mounted="registerTimeline"></Barbier1>
     </Transition>
     <Transition
       name='fade'
       v-else-if="isPage('Barbier2')"
     >
-      <Barbier2 ref="barbier2" :auto-start="true"></Barbier2>
+      <Barbier2 ref="barbier2" :auto-start="autoStart" @mounted="registerTimeline"></Barbier2>
     </Transition>
     <Transition
       name='fade'
       v-else-if="isPage('Game')"
     >
-      <Game ref="game" :auto-start="true"></Game>
+      <Game ref="game" :auto-start="autoStart" @mounted="registerTimeline"></Game>
     </Transition>
     <Transition
       name='fade'
       v-else-if="isPage('About')"
     >
-      <About ref="about" :auto-start="true"></About>
+      <About ref="about" :auto-start="autoStart" @mounted="registerTimeline"></About>
     </Transition>
     </Slide>
   </Slide>

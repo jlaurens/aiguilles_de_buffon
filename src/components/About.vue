@@ -7,12 +7,13 @@ const props = defineProps({
     default: [['FOO', 'BAR']],
   }
 })
-defineEmits([
-  'onSelected'
+const $emit = defineEmits([
+  'mounted'
 ])
 const color = ref('')
 onMounted(() => {
   color.value  = 'hsl('+(360*Math.random())+',66%,50%)'
+  $emit('mounted')
 })
 </script>
 

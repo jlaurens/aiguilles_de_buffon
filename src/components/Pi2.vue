@@ -160,7 +160,7 @@ const timeline_first_line = (duration: number) => {
       opacity: 1,
       duration: d,
     })
-    d *= 0.95
+    d *= 0.9
   }
   if (!style_w01__) {
     return tl
@@ -321,7 +321,7 @@ const timeline_place_numbers = (duration: number) => {
   }
   var en: HTMLElement = n31.value!
   r = en.getBoundingClientRect()
-  const t = (r.bottom + 10)+'px'
+  const t = (3 * r.bottom - 2 * r.top)+'px'
   en = n00.value!
   en.style.display = 'block'
   en.style.position = 'absolute'

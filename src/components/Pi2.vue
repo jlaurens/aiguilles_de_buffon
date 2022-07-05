@@ -629,7 +629,7 @@ onMounted(() => {
   opacity: 0;
 }
 .numbers {
-  font-family: "JetBrainsMono";
+  font-family: VictorMono-Regular, monospace;
   display: flex wrap;
   position: absolute;
   top:0px;

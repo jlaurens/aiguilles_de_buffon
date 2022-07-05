@@ -51,6 +51,7 @@ const title_by_name = {
 }
 const title = ref(title_by_name['Menu'])
 const switchPage = (name: string) => {
+  console.log('PAGE SWITCH', name)
   const qr = (name: string) => {
     const png = name
     if (qrImage.value == png) {

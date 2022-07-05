@@ -21,12 +21,12 @@ onMounted(() => {
     <div class="center_h">
       <div class="center_v">
         <div class="content">
-          <div>Version 1 © 2022 Jérôme Laurens</div>
+          <div ref="A1">Version 1 © 2022 Jérôme Laurens</div>
           <div>Institut de Mathématiques de Bourgogne</div>
           <div>Unité Mixte de Recherche 5584</div>
           <div>CNRS / Université de Bourgogne</div>
           <div>Crédits photographiques: wikipedia</div>
-          <div>Polices: LifeSavers, IBMPlexSans, GFSNeohellenic</div>
+          <div>Polices: LifeSavers, <span class="plex">IBMPlexSans</span>, <span class="victor">VictorMono</span></div>
         </div>
       </div>
     </div>
@@ -57,5 +57,11 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+}
+.plex {
+  font-family: IBMPlexSans-Regular, sans-serif;
+}
+.victor {
+  font-family: VictorMono-Regular, monospace;
 }
 </style>

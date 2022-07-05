@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Ref, ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { Ref, ref, onMounted, onUnmounted } from 'vue'
 import { gsap, Power1 } from 'gsap'
 const props = defineProps({
   size: {
@@ -415,16 +415,16 @@ const timeline = () => {
     2,
     generator_maker(refs.l2),
     generator_maker(refs.n2)
-  ))
+  ), '<2')
   tl.add(timeline_other_line(
     2,
     generator_maker(refs.l3),
     generator_maker(refs.n3)
-  ))
+  ), '<2')
   tl.add(timeline_hide_words(2, refs.w_all))
-  tl.to({},{duration:0.5})
-  tl.add(timeline_place_numbers(2))
+  tl.add(timeline_place_numbers(2), '+=0.5')
   tl.add(timeline_center(2))
+  tl.to({},{duration:2})
   return tl
 }
 var style_w01__: CSSStyleDeclaration | null = null

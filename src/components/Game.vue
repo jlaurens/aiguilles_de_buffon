@@ -130,7 +130,7 @@ const $emit = defineEmits([
         </div>
         <div ref="C" class="C">
           <div ref="C1" class="C1 hidden">Presque 32% si la longueur des aiguilles vaut une demi largeur de latte.</div>
-          <div ref="C2" class="C2 hidden">En 1733, Buffon donne la valeur exacte: 1÷<span ref="pi" class="greek">π</span></div>
+          <div ref="C2" class="C2 hidden">En 1733, Buffon donne la valeur exacte&thinsp;: 1÷<span ref="pi" class="greek">π</span></div>
           <div ref="C3" class="C3 hidden" :style="C3_style">Mais qu'est-ce que <span ref="pi" class="greek">π</span> ?</div>
         </div>
       </div>

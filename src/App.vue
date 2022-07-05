@@ -234,6 +234,7 @@ const registerTimeline = (tl: (vars?: gsap.TimelineVars) => gsap.core.Timeline, 
   <Rain ref='rain' :z-index='999' v-if="rainIsOn"/>
   <Transition
     name='fade'
+    mode="out-in"
     v-if="qrIsOn"
   >
     <QR :bg-name='qrImage' bg-size="contain" @click="dismissQR()">
@@ -243,6 +244,7 @@ const registerTimeline = (tl: (vars?: gsap.TimelineVars) => gsap.core.Timeline, 
   <Slide v-if="isPage('Start')&&!trialIsOn&&!menuIsOn" :z-index="1000">
     <Transition
       name='fade'
+      mode="out-in"
     >
       <Start ref="start" :auto-start="autoStart" @mounted="registerTimeline"></Start>
     </Transition>
@@ -260,36 +262,42 @@ const registerTimeline = (tl: (vars?: gsap.TimelineVars) => gsap.core.Timeline, 
     </Transition>
     <Transition
       name='fade'
+      mode="out-in"
       v-else-if="isPage('Pi1')"
     >
       <Pi1 ref="pi1" :auto-start="autoStart" @mounted="registerTimeline"></Pi1>
     </Transition>
     <Transition
       name='fade'
+      mode="out-in"
       v-else-if="isPage('Pi2')"
     >
       <Pi2 ref="pi2" :auto-start="autoStart" @mounted="registerTimeline"></Pi2>
     </Transition>
     <Transition
       name='fade'
+      mode="out-in"
       v-else-if="isPage('Barbier1')"
     >
       <Barbier1 ref="barbier1" :auto-start="autoStart" @mounted="registerTimeline"></Barbier1>
     </Transition>
     <Transition
       name='fade'
+      mode="out-in"
       v-else-if="isPage('Barbier2')"
     >
       <Barbier2 ref="barbier2" :auto-start="autoStart" @mounted="registerTimeline"></Barbier2>
     </Transition>
     <Transition
       name='fade'
+      mode="out-in"
       v-else-if="isPage('Game')"
     >
       <Game ref="game" :auto-start="autoStart" @mounted="registerTimeline"></Game>
     </Transition>
     <Transition
       name='fade'
+      mode="out-in"
       v-else-if="isPage('About')"
     >
       <About ref="about" :auto-start="autoStart" @mounted="registerTimeline"></About>
@@ -361,7 +369,7 @@ b {
 .fade-leave-active {
   transition: opacity 2s ease;
 }
-.fade-enter,
+.fade-enter-from,
 .fade-leave-to {
   opacity: 0;
 }

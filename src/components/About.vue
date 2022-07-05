@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue'
 import { gsap } from 'gsap'
 import W from './bricks/W.vue'
 
+const about = ref<HTMLElement>()
+
 const props = defineProps({
   items: {
     type: Array<[String, String]>,
@@ -23,6 +25,10 @@ const timeline = (vars?: gsap.TimelineVars) => {
       duration: 1 + 4 * Math.random()
     }, 'Z+='+ (3 * Math.random()))
   }
+  tl.add(about.value!, {
+    opacity: 0,
+    duration: 2,
+  }, '+=5')
   return tl
 }
 const $emit = defineEmits([
@@ -45,7 +51,7 @@ const target = (t: () => any) => {
 </script>
 
 <template>
-  <div class="start">
+  <div class="about" ref="about">
     <div class="center_h">
       <div class="center_v">
         <div class="content">
@@ -65,7 +71,7 @@ const target = (t: () => any) => {
 </template>
 
 <style scoped>
-.start {
+.about {
   height:100%;
   font-size: 90%;
 }

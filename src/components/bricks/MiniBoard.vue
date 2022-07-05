@@ -89,9 +89,7 @@ const timeline = (n: number) => {
           x2: P2.x,
           y2: P2.y,
         }
-      }, '0').call(() => {
-        console.log('MiniBoard STEP NEXT')
-      })
+      }, '0')
       tl.to(line, {
         duration: 1,
         attr: {

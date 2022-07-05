@@ -188,7 +188,6 @@ const dismissQR = () => {
   qrIsOn.value = false
 }
 const isPage = (s: string): boolean => {
-  console.log('IS_PAGE', s, page.value)
   return page.value == s
 }
 const height = computed(() => {
@@ -201,7 +200,7 @@ const items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1'
 ) as unknown as Array<[key_t, String]>
 
 onMounted (() => {
-  switchPage('Game')
+  switchPage('Start')
 })
 const nextPage = (name: string) => {
   return {
@@ -220,19 +219,13 @@ const registerTimeline = (tl: (vars?: gsap.TimelineVars) => gsap.core.Timeline, 
   if (currentTimeline) {
     currentTimeline.restart()
   } else {
-    currentTimeline = gsap.timeline({
-      onComplete () {
-        console.log('COMPLETE', name)
-        switchPage(nextPage(name))
-      }
-    })
-    currentTimeline.add(tl({
-      duration: 3,
-    }))
+    currentTimeline = tl()
     currentTimeline.call(() => {
-      console.log('WRAPPER DONE', name)
+      console.log('WRAPPER DONE', name, nextPage(name))
+      switchPage(nextPage(name))
     })
-    currentTimeline.duration(5)
+    console.log('DURATION', name, currentTimeline.duration())
+//    currentTimeline.duration(10)
   }
 }
 </script>

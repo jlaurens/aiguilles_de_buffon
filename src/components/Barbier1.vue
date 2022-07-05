@@ -2,6 +2,12 @@
 import { ref, computed, onMounted } from 'vue'
 import { gsap, Power1 } from 'gsap'
 import { Point, Angle } from '@mathigon/euclid'
+const props = defineProps({
+  autoStart: {
+    type: Boolean,
+    default: false,
+  },
+})
 const w = ref(0), h = ref(0)
 const svgRoot = ref<SVGElement>()
 const viewBox = computed(() => {
@@ -475,10 +481,18 @@ const timeline = () => {
   }
   return tl
 }
+const $emit = defineEmits([
+  'mounted'
+])
 onMounted(() => {
-  timeline()
+  resizeListener()
+  if (props.autoStart) {
+    timeline()
+  } else {
+    $emit('mounted', timeline, 'Barbier1')
+  }
 })
-defineExpose({ timeline, resizeListener } )
+defineExpose({ resizeListener })
 const penta_Ps = (rad: number): [Point, Point, Point, Point, Point] => {
   const I = new Point(2 * r.value, 0)
   const J = new Point(0, 2 * r.value)

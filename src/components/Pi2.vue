@@ -471,8 +471,16 @@ const reset_layout = () => {
     T += 100
   })
 }
+const $emit = defineEmits([
+  'mounted'
+])
 onMounted(() => {
-  props.autoStart && timeline()
+  resizeListener()
+  if (props.autoStart) {
+    timeline()
+  } else {
+    $emit('mounted', timeline, 'Pi2')
+  }
 })
 onUnmounted(() => {
   resizeListener()

@@ -545,10 +545,18 @@ const timeline = (): gsap.core.Timeline => {
   }
   return tl
 }
+const $emit = defineEmits([
+  'mounted'
+])
 onMounted(() => {
-  timeline()
+  resizeListener()
+  if (props.autoStart) {
+    timeline()
+  } else {
+    $emit('mounted', timeline, 'Barbier2')
+  }
 })
-defineExpose({ timeline, resizeListener })
+defineExpose({ resizeListener })
 </script>
 <template>
 <div ref="main" class="main">

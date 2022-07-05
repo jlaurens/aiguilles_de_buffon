@@ -204,7 +204,7 @@ const items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1'
       <div class="qrcode-help">Cliquer l'image pour fermer</div>
     </QR>
   </Transition>
-  <Slide v-if="isPage('Start')" :z-index="1000">
+  <Slide v-if="isPage('Start')&&!trialIsOn&&!menuIsOn" :z-index="1000">
     <Transition
       name='fade'
     >

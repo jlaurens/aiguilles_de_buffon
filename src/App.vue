@@ -278,10 +278,6 @@ const items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1'
   src: url('./fonts/LifeSavers-ExtraBold.woff') format('woff');
 }
 @font-face {
-  font-family: JetBrainsMono;
-  src: url('./fonts/JetBrainsMono-VariableFont_wght.woff') format('woff');
-}
-@font-face {
   font-family: VictorMono-Regular;
   src: url('./fonts/VictorMono-SemiBold.woff') format('woff');
 }

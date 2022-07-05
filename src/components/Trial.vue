@@ -263,7 +263,7 @@ defineExpose({ show, toggleRun, accelerate, decelerate, resizeListener })
 
 <style scoped>
 .trial-title {
-  font-family: VictorMono-Italic, JetBrainsMono, monospace;
+  font-family: VictorMono-Italic, monospace;
   margin:10px;
   text-align: center;
 }
@@ -288,7 +288,7 @@ canvas.trial-canvas {
   left:0px;
 }
 .trial-digit {
-  font-family: VictorMono-Regular, JetBrainsMono, monospace;
+  font-family: VictorMono-Regular, monospace;
 }
 .greek {
   color: v-bind('goodColor');

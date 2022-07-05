@@ -17,16 +17,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="center_h">
-    <div class="center_v">
-      <div class="start">
-        Version 1
+  <div class="start">
+    <div class="center_h">
+      <div class="center_v">
+        <div class="content">
+          <div>Version 1 © 2022 Jérôme Laurens</div>
+          <div>Institut de Mathématiques de Bourgogne</div>
+          <div>Unité Mixte de Recherche 5584</div>
+          <div>CNRS / Université de Bourgogne</div>
+          <div>Crédits photographiques: wikipedia</div>
+          <div>Polices: LifeSavers, IBMPlexSans, GFSNeohellenic</div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.start {
+  height:100%;
+  font-size: 90%;
+}
 .center_v {
   height:100%;
   display:flex;
@@ -41,33 +52,10 @@ onMounted(() => {
   align-items: left;
   justify-content: space-around;
 }
-.menu {
-  cursor: pointer;
-  padding-left:10px;
-  padding-right:10px;
-  text-align: left;
-}
-.item {
-  padding-left: 1.5em;
-}
-.item:before {
-  content: '>';
-  position: relative;
-  left: -1em;  /* place the SVG at the start of the padding */
-  width: 1em;
-}
-.item:hover {
-  color: v-bind('color');
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-.bullet {
-  z-index: 2000;
+.content {
+  height:100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 </style>

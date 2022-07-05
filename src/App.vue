@@ -127,7 +127,7 @@ onMounted(()=>{
     },
     { signal: controller.signal }
   );
-  switchPage('Start')
+  switchPage('About')
 })
 const isAbortController = (controller: AbortController|null): controller is AbortController => {
   return !!controller
@@ -210,13 +210,6 @@ const items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1'
       <Start ref="start" :auto-start="true"></Start>
     </Transition>
   </Slide>
-  <Slide v-else-if="isPage('About')" :z-index="1000">
-    <Transition
-      name='fade'
-    >
-      <About ref="about" :auto-start="true"></About>
-    </Transition>
-  </Slide>
   <Slide v-else-if="!trialIsOn" :z-index="1000">
     <Title><span v-html="title"></span></Title>
     <Slide :v-padding="height" :z-index="1000">
@@ -260,9 +253,9 @@ const items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1'
     </Transition>
     <Transition
       name='fade'
-      v-else-if="isPage('Start')"
+      v-else-if="isPage('About')"
     >
-      <Start ref="start" :auto-start="true"></Start>
+      <About ref="about" :auto-start="true"></About>
     </Transition>
     </Slide>
   </Slide>

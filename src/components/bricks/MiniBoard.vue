@@ -75,13 +75,7 @@ const timeline = (n: number) => {
       line.setAttribute('stroke-width', '0.5vh')
       let d = (P2.y-height.value/2)*(height.value/2 - P1.y)
       container.appendChild(line)
-      tl.to(success_opacity, {
-        duration: 0.5,
-        value: 0.2,
-      }).to(failure_opacity, {
-        duration: 0.5,
-        value: 0.2,
-      }, '<').to(line, {
+      tl.to(line, {
         duration: 1,
         attr: {
           x1: P1.x,
@@ -98,7 +92,10 @@ const timeline = (n: number) => {
       }).to(d>0? success_opacity: failure_opacity, {
         duration: 1,
         value: 1,
-      }, '<=50%').to({}, { duration: 0.5 })
+      }, '<=50%').to(d>0? failure_opacity : success_opacity, {
+        duration: 1,
+        value: 0.2,
+      }, '<').to({}, { duration: 0.5 })
       return [tl, d>0]
     }
     let i = 0

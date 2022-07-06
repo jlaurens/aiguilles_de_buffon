@@ -156,10 +156,7 @@ const timeline_first_line = (duration: number) => {
     }, label).fromTo(en, {
       color: color,
       duration: 0,
-    }, {
-      opacity: 1,
-      duration: d,
-    })
+    }, opacity(1, d))
     d *= 0.9
   }
   if (!style_w01__) {
@@ -182,7 +179,7 @@ const timeline_first_line = (duration: number) => {
   var pn: HTMLElement|null = null
   var i = 1
   var label = ''+i++
-  tl.addLabel(label)
+  tl.addLabel(label, '+=1')
   for (let [ewr, enr] of [[w01, n01], [w02, n02], [w03, n03], [w04, n04], [w05, n05], [w06, n06], [w07, n07], [w08, n08], [w09, n09], [w10, n10], [w11, n11]
   ]) {
     var ew = ewr.value!
@@ -197,14 +194,13 @@ const timeline_first_line = (duration: number) => {
   pw && pn && f_2(pw, pn, label)
   return tl
 }
+const opacity = (opacity: number, duration=1, ease=Power1.easeInOut) => {
+  return { opacity, duration, ease }
+}
 const timeline_hide_words = (duration: number, rs: Ref<HTMLElement>[]) => {
   var tl = gsap.timeline()
   for (let r of rs) {
-    tl.to(r.value!, {
-      opacity: 0,
-      duration: duration*(1+2*Math.random())/2,
-      ease:Power1.easeInOut,
-    }, 0)
+    tl.to(r.value!, opacity(0, duration*(1+2*Math.random())/2), 0)
   }
   return tl
 }
@@ -233,10 +229,7 @@ const timeline_other_line = (
   var f_1n = (en: HTMLElement, label: string) => {
     tl.fromTo(en, {
       color: color,
-    }, {
-      opacity: 1,
-      duration: duration,
-    }, label)
+    }, opacity(1, duration), label)
   }
   if (!style_w01__) {
     return tl
@@ -292,11 +285,7 @@ const timeline_center = (duration: number) => {
   for (let r of refs.n_all) {
     f(r.value!)
   }
-  tl.to(n31b.value!, {
-    opacity: 1,
-    duration: duration,
-    ease: Power1.easeIn,
-  }, 0)
+  tl.to(n31b.value!, opacity(1, duration), 0)
   return tl
 }
 const timeline_place_numbers = (duration: number) => {
@@ -321,7 +310,8 @@ const timeline_place_numbers = (duration: number) => {
   }
   var en: HTMLElement = n31.value!
   r = en.getBoundingClientRect()
-  const t = (3 * r.bottom - 2 * r.top)+'px'
+  const t = (4 * r.bottom - 3 * r.top)+'px'
+  console.log('PLACE', t, l)
   en = n00.value!
   en.style.display = 'block'
   en.style.position = 'absolute'
@@ -331,11 +321,7 @@ const timeline_place_numbers = (duration: number) => {
     left: (l-4*w)+'px',
     duration: 0,
   })
-  tl.to(en, {
-    opacity: 1,
-    duration: duration,
-    ease: Power1.easeIn,
-  })
+  tl.to(en, opacity(1, duration))
   en = n00b.value!
   en.style.display = 'block'
   en.style.position = 'absolute'
@@ -345,11 +331,7 @@ const timeline_place_numbers = (duration: number) => {
     left: (l-2*w)+'px',
     duration: 0,
   })
-  tl.to(en, {
-    opacity: 1,
-    duration: duration,
-    ease: Power1.easeIn,
-  })
+  tl.to(en, opacity(1, duration))
   e1.style.zIndex = '1099'
   tl.to(e1, {
     color: colors[e1.textContent || ''],
@@ -367,11 +349,7 @@ const timeline_place_numbers = (duration: number) => {
     left: (l+w)+'px',
     duration: 0,
   })
-  tl.to(en, {
-    opacity: 1,
-    duration: duration,
-    ease: Power1.easeIn,
-  }, "<33%")
+  tl.to(en, opacity(1, duration), "<33%")
   var i = 0
   for (let r of refs.n) {
     if (i>1) {
@@ -396,6 +374,7 @@ const timeline_place_numbers = (duration: number) => {
     left: (l+32*w)+'px',
     duration: 0,
   })
+  tl.duration(60)
   return tl
 }
 const timeline = () => {
@@ -405,30 +384,39 @@ const timeline = () => {
     reset_layout()
   })
   style_w01__ = window.getComputedStyle(w01.value!, null)
-  tl.add(timeline_first_line(2))
-  tl.add(timeline_other_line(
+  tl.to(l0.value!, opacity(1), '+=1')
+  .add(timeline_first_line(2))
+  .to(l1.value!, opacity(1))
+  .add(timeline_other_line(
     2,
     generator_maker(refs.l1),
     generator_maker(refs.n1)
   ))
-  tl.add(timeline_other_line(
+  .to(l2.value!, opacity(1))
+  .add(timeline_other_line(
     2,
     generator_maker(refs.l2),
     generator_maker(refs.n2)
   ), '<2')
-  tl.add(timeline_other_line(
+  .to(l3.value!, opacity(1))
+  .add(timeline_other_line(
     2,
     generator_maker(refs.l3),
     generator_maker(refs.n3)
   ), '<2')
-  tl.add(timeline_hide_words(2, refs.w_all))
-  tl.add(timeline_place_numbers(2), '+=0.5')
-  tl.add(timeline_center(2))
-  tl.to({},{duration:2})
+  .add(timeline_hide_words(2, refs.w_all))
+  .add(timeline_place_numbers(2), '+=0.5')
+  .add(timeline_center(2))
+  .to({},{duration:5})
   return tl
 }
 var style_w01__: CSSStyleDeclaration | null = null
 const main = ref<HTMLElement>()
+const words = ref<HTMLElement>()
+const l0 = ref<HTMLElement>()
+const l1 = ref<HTMLElement>()
+const l2 = ref<HTMLElement>()
+const l3 = ref<HTMLElement>()
 const numbers = ref<HTMLElement>()
 const reset_layout = () => {
   var T = 100;
@@ -485,12 +473,6 @@ onMounted(() => {
 onUnmounted(() => {
   resizeListener()
 })
-
-const l0 = ref<HTMLElement>()
-const l1 = ref<HTMLElement>()
-const l2 = ref<HTMLElement>()
-const l3 = ref<HTMLElement>()
-const words = ref<HTMLElement>()
 const resizeListener = () => {
   console.log('RESIZE POETRY')
   const m = main.value
@@ -516,7 +498,7 @@ onMounted(() => {
 <template>
   <div ref = "main" class="main">
     <div ref="words">
-      <div ref="l0" class="verse">
+      <div ref="l0" class="verse hidden">
         <span ref="w01">Que</span>&nbsp;
         <span ref="w02">j</span>
         <span ref="w02b">'</span>
@@ -528,10 +510,10 @@ onMounted(() => {
         <span ref="w08">nombre</span>&nbsp;
         <span ref="w09">utile</span>&nbsp;
         <span ref="w10">aux</span>&nbsp;
-        <span ref="w11">sages</span>&nbsp;
+        <span ref="w11">sages</span>&thinsp;
         <span ref="w11b">!</span>
       </div>
-      <div ref="l1" class="verse">
+      <div ref="l1" class="verse hidden">
         <span ref="w12">Glorieux</span>&nbsp;
         <span ref="w13">Archimède</span>
         <span ref="w13b">,</span>&nbsp;
@@ -539,7 +521,7 @@ onMounted(() => {
         <span ref="w15">ingénieur</span>
         <span ref="w15b">,</span>
       </div>
-      <div ref="l2" class="verse">
+      <div ref="l2" class="verse hidden">
         <span ref="w16">Qui</span>&nbsp;
         <span ref="w17">de</span>&nbsp;
         <span ref="w18">ton</span>&nbsp;
@@ -548,10 +530,10 @@ onMounted(() => {
         <span ref="w20">peut</span>&nbsp;
         <span ref="w21">priser</span>&nbsp;
         <span ref="w22">la</span>&nbsp;
-        <span ref="w23">valeur</span>&nbsp;
+        <span ref="w23">valeur</span>&thinsp;
         <span ref="w23b">?</span>
       </div>
-      <div ref="l3" class="verse">
+      <div ref="l3" class="verse hidden">
         <span ref="w24">Pour</span>&nbsp;
         <span ref="w25">moi</span>
         <span ref="w25b">,</span>&nbsp;
@@ -662,5 +644,8 @@ onMounted(() => {
   display: inline-block;
   opacity: 0;
   width: 0px;
+}
+.hidden {
+  opacity: 0;
 }
 </style>

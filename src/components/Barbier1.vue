@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { gsap, Power1 } from 'gsap'
 import { Point, Angle } from '@mathigon/euclid'
+import { TweenLite } from 'gsap-trial/gsap-core';
 const props = defineProps({
   autoStart: {
     type: Boolean,
@@ -320,53 +321,48 @@ const triangle_top = ref<HTMLElement>()
 const reuleaux_top = ref<HTMLElement>()
 const penta_top = ref<HTMLElement>()
 const timeline = () => {
+  const opacity = (opacity: number, duration = 1, ease = Power1.easeInOut) => {
+    return {
+      opacity,
+      duration,
+      ease,
+    }
+  }
+  const value = (value: number, duration = 5, ease = Power1.easeInOut) => {
+    return {
+      value,
+      duration,
+      ease,
+    }
+  }
   const tl = gsap.timeline()
   if (circle.value && square.value && triangle.value && reuleaux.value && penta.value &&
         A.value && l1.value && l2.value && l3.value && l4.value && l5.value &&
         B.value && l6.value && l7.value && l8.value && l9.value &&
         C.value && l10.value && l11.value )
   {
-    tl.to(circle_s, {
+    tl.to(l1.value, opacity(1, 2), '+=2')
+    .to(circle.value, opacity(1, 2))
+    .to(circle_s, value(1)).to(circle_s, value(0))
+    tl.to(l2.value, opacity(1, 2))
+    .to(square.value, opacity(1, 2))
+    .to(square_s, {
       value: 1,
       duration: 5,
       ease: Power1.easeInOut,
     })
-    tl.to(circle_s, {
+    .to(square_s, {
       value: 0,
       duration: 5,
       ease: Power1.easeInOut,
     })
-    tl.to(l2.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(square.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(square_s, {
-      value: 1,
-      duration: 5,
-      ease: Power1.easeInOut,
-    })
-    tl.to(square_s, {
-      value: 0,
-      duration: 5,
-      ease: Power1.easeInOut,
-    })
-    tl.to(square.value, {
+    .to(square.value, {
       opacity: 0,
       duration: 2,
     })
-    tl.to(l3.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(triangle.value, {
-      opacity: 1,
-      duration: 2,
-    }, '<')
-    tl.to(triangle_s, {
+    tl.to(l3.value, opacity(1, 2))
+    .to(triangle.value, opacity(1, 2), '<')
+    .to(triangle_s, {
       value: 1,
       duration: 5,
       ease: Power1.easeInOut,
@@ -376,14 +372,8 @@ const timeline = () => {
       duration: 5,
       ease: Power1.easeInOut,
     })
-    tl.to(l4.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(reuleaux.value, {
-      opacity: 1,
-      duration: 2,
-    })
+    tl.to(l4.value, opacity(1, 2))
+    tl.to(reuleaux.value, opacity(1, 2))
     tl.to(triangle.value, {
       opacity: 0,
       duration: 2,
@@ -398,52 +388,20 @@ const timeline = () => {
       duration: 2.5,
       ease: Power1.easeInOut,
     })
-    tl.to(l5.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(penta.value, {
-      opacity: 1,
-      duration: 2,
-    })
-    tl.to(penta_s, {
-      value: 1,
-      duration: 4,
-      ease: Power1.easeInOut,
-    })
-    tl.to(A.value, {
-      opacity: 0,
-      duration: 1
-    }).call(() => {
+    tl.to(l5.value, opacity(1, 2))
+    tl.to(penta.value, opacity(1, 2))
+    tl.to(penta_s, value(1, 4))
+    tl.to(A.value, opacity(0, 1)).call(() => {
       A.value!.style.display = 'none'
       B.value!.style.display = 'block'
-    }).to(l6.value, {
-      opacity: 1,
-      duration: 1,
-    }).to({}, { duration: 2.5 }).to(l6.value, {
-      opacity: 1,
-      duration: 1,
-    }).to({}, { duration: 2.5 })
-    tl.to(circle.value, {
-      opacity: 0,
-      duration: 1,
-    }).to(penta.value, {
-      opacity: 0,
-      duration: 1,
-    },'<').to(l7.value, {
-      opacity: 1,
-      duration: 1,
-    }).to({}, { duration: 2.5 }).to(l8.value, {
-      opacity: 1,
-      duration: 1,
-    }).to({}, { duration: 1.5 }).to(l9.value, {
-      opacity: 1,
-      duration: 1,
-    }).to({}, { duration: 1.5 })
-    tl.to(B.value, {
-      opacity: 0,
-      duration: 1,
-    }).call(() => {
+    }).to(l6.value, opacity(1, 1))
+    .to(circle.value, opacity(0, 1), '+=2.5')
+    .to(penta.value, opacity(0, 1),'<')
+    .to(l7.value, opacity(1, 1))
+    .to(l8.value, opacity(1, 1), '+=2.5')
+    .to(l9.value, opacity(1, 1), '+=2.5')
+    .to(B.value, opacity(0, 1), '+=2.5')
+    tl.call(() => {
       B.value!.style.display = 'none'
       C.value!.style.display = 'block'
       circle_s.value = -0.15
@@ -458,26 +416,13 @@ const timeline = () => {
       reuleaux_top.value!.style.opacity = '0'
       penta_top.value!.style.opacity = '0'
     })
-    tl.to(circle.value, {
-      opacity: 1,
-      duration: 1,
-    }, '<').to(square.value, {
-      opacity: 1,
-      duration: 1,
-    }, '<').to(triangle.value, {
-      opacity: 1,
-      duration: 1,
-    }, '<').to(penta.value, {
-      opacity: 1,
-      duration: 1,
-    }, '<')
-    tl.to(l10.value, {
-      opacity: 1,
-      duration: 1,
-    }).to({}, { duration: 1.5 }).to(l11.value, {
-      opacity: 1,
-      duration: 1,
-    })
+    tl.to(circle.value, opacity(1, 1), '<')
+    .to(square.value, opacity(1, 1), '<')
+    .to(triangle.value, opacity(1, 1), '<')
+    .to(penta.value, opacity(1, 1), '<')
+    tl.to(l10.value, opacity(1, 1))
+    .to(l11.value, opacity(1, 1), '+=1.5')
+    .to({}, { duration: 1.5 })
   }
   return tl
 }
@@ -613,7 +558,7 @@ const pnt_Ps = computed(() => {
       <svg ref="svgRoot" version="1.1" :viewBox="viewBox" class="svg-content">
         <line ref="top" x1="0" :y1="y0-2*r" :x2="w" :y2="y0-2*r" stroke="black" class="line top"/>
         <line ref="bottom" x1="0" :y1="y0" :x2="w" :y2="y0" stroke="black" class="line bottom"/>
-        <g ref="circle">
+        <g ref="circle" class="hidden">
           <circle :cx="circle_x" :cy="circle_y" :r="r" class="circle"/>
           <line :x1="circle_x" :y1="circle_y" :x2="circle_origin.x" :y2="circle_origin.y" class="radius transparent"/>
           <circle ref="circle_origin" :cx="circle_origin.x" :cy="circle_origin.y" r="5" class="circle_dot"></circle>
@@ -643,7 +588,7 @@ const pnt_Ps = computed(() => {
       </svg>
     </div>
     <div ref="A">
-      <div ref="l1">Une roue ronde tourne entre deux lignes parallèles fixes,</div>
+      <div ref="l1" class="hidden">Une roue ronde tourne entre deux lignes parallèles fixes,</div>
       <div ref="l2" class="hidden">mais pas une roue carré,<span ref="l3" class="hidden"> ni une roue triangle,</span></div>
       <div ref="l4" class="hidden">à moins d'arrondir correctement les côtés.</div>
       <div ref="l5" class="hidden">On peut augmenter le nombres de côtés...</div>
@@ -656,7 +601,7 @@ const pnt_Ps = computed(() => {
     </div>
     <div ref="C" class="none">
       <div ref="l10" class="hidden">Mais parmi toutes ces roues,</div>
-      <div ref="l11" class="hidden">laquelle va le plus loin ?</div>
+      <div ref="l11" class="hidden">laquelle va le plus loin&thinsp;?</div>
     </div>
   </div>
 </template>

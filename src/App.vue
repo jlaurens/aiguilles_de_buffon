@@ -13,6 +13,7 @@ import Slide from './components/bricks/Slide.vue'
 import Toolbar from './components/bricks/Toolbar.vue'
 import Rain from './components/bricks/Rain.vue'
 import QR from './components/bricks/QR.vue'
+import ProgressBar from './components/bricks/ProgressBar.vue'
 import Menu from './components/Menu.vue'
 import Start from './components/Start.vue'
 import Game from './components/Game.vue'
@@ -33,10 +34,8 @@ const barbier1 = ref()
 const barbier2 = ref()
 const trial = ref()
 const about = ref()
-const panel = ref(null as any)
-panel.value = Menu
 const menuIsOn = ref(true)
-const page = ref('NONE')
+const page = ref('')
 const trialIsOn = ref(false)
 const qrIsOn = ref(false)
 const autoStart = ref(false)
@@ -44,7 +43,7 @@ const names = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbier2', 'About']
 const title_by_name = {
   'Start': 'Commencer',
   'Game': 'Le jeux des aiguilles',
-  'Pi1': 'Savez-vous parler grec ?',
+  'Pi1': 'Savez-vous parler grec&thinsp;?',
   'Pi2': 'Combien vaut <span class="greek">π</span>',
   'Barbier1': 'Des roues pas vraiment rondes',
   'Barbier2': 'Des roues qui avancent pareil',
@@ -52,7 +51,9 @@ const title_by_name = {
   'About': 'À propos',
   'Menu': 'Les aiguilles de Buffon',
 }
-const title = ref(title_by_name['Menu'])
+const title_ref = ref<HTMLElement>()
+const title = ref(title_by_name['Start'])
+const goodColor = ref('hsl('+Math.random()*360+',66%,50%)')
 const switchPage = (name: string) => {
   console.log('PAGE SWITCH', name)
   const qr = (name: string) => {
@@ -78,34 +79,49 @@ const switchPage = (name: string) => {
     case 'Barbier1':
     case 'Barbier2':
     case 'About':
-      if (title.value != name && currentTimeline) {
-        currentTimeline.kill()
+      if (page.value != name) {
+        currentTimeline?.kill()
         currentTimeline = undefined
       }
       title.value = title_by_name[name]
       page.value = name
       menuIsOn.value = false
+      qrIsOn.value = false
       rainIsOn.value = true
       trialIsOn.value = false
-      qrIsOn.value = false
-      trial.value && trial.value.show(false)
+      trial.value?.show(false)
       break
     case 'Trial':
       title.value = title_by_name[name]
       page.value = name
-      trial.value && trial.value.show(true)
       menuIsOn.value = false
       rainIsOn.value = false
-      trialIsOn.value = true
       qrIsOn.value = false
+      trialIsOn.value = true
+      trial.value?.show(true)
+      trial.value?.run()
+      progress.value = 0
       break
-    default:
-      title.value = title_by_name['Menu']
+    case 'Menu':
+      currentTimeline?.kill()
+      currentTimeline = undefined
+      title.value = title_by_name[name]
+      page.value = name
       menuIsOn.value = true
       rainIsOn.value = true
-      trialIsOn.value = false
       qrIsOn.value = false
-      trial.value && trial.value.show(false)
+      trialIsOn.value = false
+      trial.value?.show(false)
+      break
+    default:
+      currentTimeline?.kill()
+      currentTimeline = undefined
+      title.value = ''
+      menuIsOn.value = false
+      rainIsOn.value = false
+      qrIsOn.value = false
+      trialIsOn.value = false
+      trial.value?.show(false)
       break
   }
 }
@@ -118,12 +134,46 @@ onMounted(()=>{
   document.addEventListener(
     "keyup",
     (e: KeyboardEvent) => {
-      if (e.key ==  "p") {
-        panel.value = Pi1
+      if (e.key ==  "0") {
+        if (currentTimeline?.labels.Trial) {
+          currentTimeline.seek('Trial')
+          currentTimeline.resume()
+        } else {
+          // const ts = currentTimeline?.timeScale()
+          // currentTimeline?.kill()
+          // currentTimeline = gsap.timeline()
+          // .call(() => {
+          //   switchPage('Start')
+          // }, [], '+=15')
+          // ts && currentTimeline?.timeScale(ts)
+          // trial.value.run()
+        }
+      } else if (e.key ==  "1") {
+        switchPage('Start')
+      } else if (e.key ==  "2") {
+        switchPage('Game')
+      } else if (e.key ==  "3") {
+        switchPage('Pi1')
+      } else if (e.key ==  "4") {
+        switchPage('Pi2')
+      } else if (e.key ==  "5") {
+        switchPage('Barbier1')
+      } else if (e.key ==  "6") {
+        switchPage('Barbier2')
+      } else if (e.key ==  "7") {
+        switchPage('About')
       } else if (e.key ==  "+") {
-        trial.value && trial.value.accelerate()
+        if (trialIsOn.value) {
+          trial.value.accelerate()
+        } else if (currentTimeline) {
+          currentTimeline.timeScale(2*currentTimeline.timeScale())
+        }
       } else if (e.key ==  "-") {
-        trial.value && trial.value.decelerate()
+        if (trialIsOn.value) {
+          trial.value.decelerate()
+        } else if (currentTimeline) {
+          currentTimeline.timeScale(currentTimeline.timeScale()/2)
+        }
       } else if (e.key ==  "r") {
         trial.value && trial.value.toggleRun()
       } else if (e.key ==  "R") {
@@ -132,6 +182,8 @@ onMounted(()=>{
         trial.value && trial.value.activate(true)
       } else if (e.key ==  "X") {
         trial.value && trial.value.activate(false)
+      } else if (e.key ==  " ") {
+        currentTimeline?.paused( !currentTimeline?.paused() )
       }
     },
     { signal: controller.signal }
@@ -169,20 +221,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', resizeListener)
 })
-const beforeEnter = (el: Element) => {
-  gsap.set(el, {
-    opacity:0,
-    scale:0,
-  })
-}
-const enter = (el: Element, done: any) => {
-  gsap.to(el, {
-    opacity:1,
-    scale:1,
-    duration:1,
-    onComplete: done,
-  })
-}
 var qrImage = ref('None')
 const dismissQR = () => {
   qrIsOn.value = false
@@ -193,15 +231,15 @@ const isPage = (s: string): boolean => {
 const height = computed(() => {
   return 3*window.innerHeight/24
 })
+const height1 = computed(() => {
+  return isPage('Start') ? 0 : height.value
+})
 type key_t = keyof typeof title_by_name
 
 const items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbier2', 'Trial', 'About'].map(
   (k) => { return [k, title_by_name[k as key_t]] }
 ) as unknown as Array<[key_t, String]>
 
-onMounted (() => {
-  switchPage('Start')
-})
 const nextPage = (name: string) => {
   return {
     Start: 'Game',
@@ -214,94 +252,63 @@ const nextPage = (name: string) => {
   } [name] || 'Start'
 }
 let currentTimeline: gsap.core.Timeline | undefined
+//switchPage('Start')
+switchPage('Pi1')
 const registerTimeline = (tl: (vars?: gsap.TimelineVars) => gsap.core.Timeline, name: string) => {
   console.log('FROM', name, 'TO', nextPage(name))
   if (currentTimeline) {
     currentTimeline.restart()
   } else {
     currentTimeline = tl()
+    if (!isPage('Start')) {
+      currentTimeline.call(() => {
+        progress.value = 0
+        console.log('WRAPPER DONE', name, 'Trial', progress.value)
+        switchPage('Trial')
+      }, [], 'Trial')
+      .to(progress, {
+        value: 2 * Math.PI,
+        duration: 15,
+      })
+    }
     currentTimeline.call(() => {
-      console.log('WRAPPER DONE', name, nextPage(name))
+      console.log('DONE', nextPage(name))
       switchPage(nextPage(name))
-    })
+    }, [])
+    .addLabel('NEXT', '<')
     console.log('DURATION', name, currentTimeline.duration())
 //    currentTimeline.duration(10)
   }
 }
+const progress = ref(0)
 </script>
 <template>
-  <Trial ref="trial" />
+  <Trial ref="trial" :color="goodColor"/>
   <Rain ref='rain' :z-index='999' v-if="rainIsOn"/>
   <Transition
     name='fade'
     mode="out-in"
-    v-if="qrIsOn"
   >
-    <QR :bg-name='qrImage' bg-size="contain" @click="dismissQR()">
+    <QR v-if="qrIsOn" :bg-name='qrImage' bg-size="contain" @click="dismissQR()">
       <div class="qrcode-help">Cliquer l'image pour fermer</div>
     </QR>
   </Transition>
-  <Slide v-if="isPage('Start')&&!trialIsOn&&!menuIsOn" :z-index="1000">
-    <Transition
-      name='fade'
-      mode="out-in"
-    >
-      <Start ref="start" :auto-start="autoStart" @mounted="registerTimeline"></Start>
-    </Transition>
-  </Slide>
-  <Slide v-else-if="!trialIsOn" :z-index="1000">
-    <Title><span v-html="title"></span></Title>
-    <Slide :v-padding="height" :z-index="1000">
-    <Transition
-      :css='false'
-      @before-enter='beforeEnter'
-      @enter='enter'
-      v-if="menuIsOn"
-    >
-      <Menu @on-selected="switchPage" :items="items"></Menu>
-    </Transition>
-    <Transition
-      name='fade'
-      mode="out-in"
-      v-else-if="isPage('Pi1')"
-    >
-      <Pi1 ref="pi1" :auto-start="autoStart" @mounted="registerTimeline"></Pi1>
-    </Transition>
-    <Transition
-      name='fade'
-      mode="out-in"
-      v-else-if="isPage('Pi2')"
-    >
-      <Pi2 ref="pi2" :auto-start="autoStart" @mounted="registerTimeline"></Pi2>
-    </Transition>
-    <Transition
-      name='fade'
-      mode="out-in"
-      v-else-if="isPage('Barbier1')"
-    >
-      <Barbier1 ref="barbier1" :auto-start="autoStart" @mounted="registerTimeline"></Barbier1>
-    </Transition>
-    <Transition
-      name='fade'
-      mode="out-in"
-      v-else-if="isPage('Barbier2')"
-    >
-      <Barbier2 ref="barbier2" :auto-start="autoStart" @mounted="registerTimeline"></Barbier2>
-    </Transition>
-    <Transition
-      name='fade'
-      mode="out-in"
-      v-else-if="isPage('Game')"
-    >
-      <Game ref="game" :auto-start="autoStart" @mounted="registerTimeline"></Game>
-    </Transition>
-    <Transition
-      name='fade'
-      mode="out-in"
-      v-else-if="isPage('About')"
-    >
-      <About ref="about" :auto-start="autoStart" @mounted="registerTimeline"></About>
-    </Transition>
+  <Slide v-if="!trialIsOn" :z-index="1000">
+    <Title v-if="!isPage('Start')"><span v-html="title" ref="title_ref"></span></Title>
+    <Slide :v-padding="height1" :z-index="1000">
+      <Transition
+        name='fade'
+        mode="out-in"
+      >
+        <Menu v-if="menuIsOn" @on-selected="switchPage" :items="items"></Menu>
+        <Start v-else-if="isPage('Start')" ref="start" :auto-start="autoStart" @mounted="registerTimeline"></Start>
+        <Game v-else-if="isPage('Game')" ref="game" :auto-start="autoStart" @mounted="registerTimeline"></Game>
+        <Pi1 v-else-if="isPage('Pi1')" ref="pi1" :auto-start="autoStart" @mounted="registerTimeline"></Pi1>
+        <Pi2 v-else-if="isPage('Pi2')" ref="pi2" :auto-start="autoStart" @mounted="registerTimeline"></Pi2>
+        <Barbier1 v-else-if="isPage('Barbier1')" ref="barbier1" :auto-start="autoStart" @mounted="registerTimeline"></Barbier1>
+        <Barbier2 v-else-if="isPage('Barbier2')" ref="barbier2" :auto-start="autoStart" @mounted="registerTimeline"></Barbier2>
+        <About v-else-if="isPage('About')" ref="about" :auto-start="autoStart" @mounted="registerTimeline"></About>
+      </Transition>
     </Slide>
   </Slide>
   <Toolbar :height="height">
@@ -310,6 +317,12 @@ const registerTimeline = (tl: (vars?: gsap.TimelineVars) => gsap.core.Timeline, 
     <Icon image="logo-uB-filet.png" @click="switchPage('uB')" :size="height"/>
     <Icon image="logo_CNRS.png" @click="switchPage('CNRS')" :size="height"/>
   </Toolbar>
+  <ProgressBar v-if="trialIsOn"
+    ref="progress_bar"
+    :size="height"
+    :progress="progress"
+    :color="goodColor"
+  ></ProgressBar>
 </template>
 
 <style lang="scss">

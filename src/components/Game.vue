@@ -68,20 +68,20 @@ const timeline = () => {
       }
     }
     for (let what of [A1, A2, A3]) {
-      tl.to(what.value!, opacity(1), '+=2.5')
+      tl.to(what.value!, opacity(1, 1.5), '+=1.5')
     }
-    tl.to(miniBoardOpacity, value(1), '+=2.5')
+    tl.to(miniBoardOpacity, value(1), '+=1.5')
     tl.add(miniBoard_timeline.value(10))
     tl.call(() => {
       B.value!.style.display = 'block'
-    }).to(B1.value!, opacity(1), '+=2.5')
+    }).to(B1.value!, opacity(1), '+=1.5')
     tl.to(A.value, opacity(0))
     tl.call(() => {
       A.value!.style.display = 'none'
       C.value!.style.display = 'block'
     })
     for (let what of [C1, C2, C3]) {
-      tl.to(what.value!, opacity(1), '+=2.5')
+      tl.to(what.value!, opacity(1), '+=1.5')
     }
     tl.call(() => {
       C3_scale.value = 1
@@ -131,12 +131,12 @@ const $emit = defineEmits([
         <div ref="C" class="C">
           <div ref="C1" class="C1 hidden">Presque 32% si la longueur des aiguilles vaut une demi largeur de latte.</div>
           <div ref="C2" class="C2 hidden">En 1733, Buffon donne la valeur exacte&thinsp;: 1÷<span ref="pi" class="greek">π</span></div>
-          <div ref="C3" class="C3 hidden" :style="C3_style">Mais qu'est-ce que <span ref="pi" class="greek">π</span> ?</div>
+          <div ref="C3" class="C3 hidden" :style="C3_style">Mais qu'est-ce que <span ref="pi" class="greek">π</span>&thinsp;?</div>
         </div>
       </div>
       <MiniBoardVue ref="miniBoard" :hue="pi_hue" :opacity="miniBoardOpacity"/>
       <div ref="B">
-        <div ref="B1" class="B1 hidden">Combien a-t-on de chances de gagner ?</div>
+        <div ref="B1" class="B1 hidden">Combien a-t-on de chances de gagner&thinsp;?</div>
       </div>
     </div>
   </div>

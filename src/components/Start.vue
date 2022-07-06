@@ -15,19 +15,15 @@ const A3 = ref<HTMLElement>()
 const A4 = ref<HTMLElement>()
 const timeline = (vars?: gsap.TimelineVars) => {
   const tl = gsap.timeline(vars)
-  if ( content.value && A1.value && A2.value && A3.value && A4.value ) {
+  const opacity = (opacity: number, duration=1, ease=Power1.easeInOut) => {
+    return { opacity, duration, ease }
+  }
+  if ( start.value && content.value && A1.value && A2.value && A3.value && A4.value ) {
     for (let what of [A1, A2, A3, A4]) {
-        tl.to(what.value!, {
-        opacity: 1,
-        duration: 4,
-        ease: Power1.easeInOut,
-      }, '<=33%')
+        tl.to(what.value!, opacity(1, 4), '<=33%')
     }
-    tl.to(content.value!, {
-      opacity: 0,
-      duration: 2,
-      ease: Power1.easeInOut
-    }, '+=2.5')
+    tl.to(content.value!, opacity(0, 2), '+=2.5')
+    .to(start.value!, opacity(0, 2), '<=50%')
   }
   return tl
 }

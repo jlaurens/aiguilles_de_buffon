@@ -2,8 +2,14 @@
 import { useTrialStore } from '../stores/trial'
 import Slide from './bricks/Slide.vue'
 import Title from './bricks/Title.vue'
-import { ref, onMounted, computed, watch, nextTick } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
+const props = defineProps({
+  color: {
+    type: String,
+    default: 'hsl('+Math.random()*360+',66%,50%)',
+  }
+})
 type Point = [number, number]
 
 const trial_store = useTrialStore()
@@ -11,7 +17,6 @@ const trial_store = useTrialStore()
 const COLOR_RANGE = 30;
 const PARQUET_COUNT = 6;
 const PIN_RATIO = 4;
-const goodColor = ref('')
 
 const PI_expected = 3.1415926535;
 
@@ -39,17 +44,17 @@ const debounce = (f: () => void, ms = 500) => {
 }
 var willResize = false
 const resize = () => {
-    canvas_ra[0].width = canvas_ra[1].width  = window.innerWidth;
-    parquet_width = Math.max(40, Math.floor(window.innerHeight / PARQUET_COUNT))
-    half_pin_length = parquet_width / PIN_RATIO
-    canvas_ra[0].height = canvas_ra[1].height  = parquet_width * PARQUET_COUNT;
-    var ctx = canvas_ra[0].getContext("2d")
-    ctx.lineWidth = 4
-    ctx.lineCap = "round"
-    ctx = canvas_ra[1].getContext("2d")
-    ctx.lineWidth = 4
-    ctx.lineCap = "round"
-    willResize = false
+  canvas_ra[0].width = canvas_ra[1].width  = window.innerWidth;
+  parquet_width = Math.max(40, Math.floor(window.innerHeight / PARQUET_COUNT))
+  half_pin_length = parquet_width / PIN_RATIO
+  canvas_ra[0].height = canvas_ra[1].height  = parquet_width * PARQUET_COUNT;
+  var ctx = canvas_ra[0].getContext("2d")
+  ctx.lineWidth = 4
+  ctx.lineCap = "round"
+  ctx = canvas_ra[1].getContext("2d")
+  ctx.lineWidth = 4
+  ctx.lineCap = "round"
+  willResize = false
 }
 const resizeListener = () => {
   if (!willResize) {
@@ -65,7 +70,6 @@ onMounted(() => {
 })
 var pin_paquet = 0;
 const initUI = () => {
-  goodColor.value = 'hsl('+Math.random()*360+',66%,50%)'
   swapCanvas()
   resize()
 }
@@ -193,7 +197,7 @@ const ratioStyle = computed(() => {
 })
 const digitStyle = (i: number): string => {
   var ans = good_ra[i]
-    ? 'color:'+ goodColor.value + ';'
+    ? 'color:'+ props.color + ';'
     : ''
   return ans
 }
@@ -210,6 +214,11 @@ const toggleRun = (count?: number) => {
   if (pin_paquet>=0) {
     throw_pins(count);
     requested_count = count ? count : Math.floor(pin_count.value/4)  
+  }
+}
+const run = (count?: number) => {
+  if (pin_paquet<0) {
+    toggleRun(count) 
   }
 }
 const accelerate = () => {
@@ -230,7 +239,7 @@ const displayOn = ref(true)
 const show = (yorn: boolean) => {
   displayOn.value = yorn
 }
-defineExpose({ show, toggleRun, accelerate, decelerate, resizeListener })
+defineExpose({ show, run, toggleRun, accelerate, decelerate, resizeListener })
 </script>
 
 <template>
@@ -291,6 +300,6 @@ canvas.trial-canvas {
   font-family: VictorMono-Regular, monospace;
 }
 .greek {
-  color: v-bind('goodColor');
+  color: v-bind('props.color');
 }
 </style>

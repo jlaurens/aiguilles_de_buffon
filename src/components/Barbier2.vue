@@ -508,13 +508,10 @@ const timeline = (): gsap.core.Timeline => {
     reuleaux_done_ref.value && penta_done_ref.value &&
     line_top.value && l1.value
   ) {
-    const opacity = (level: number) => {
-      return {
-        opacity: level,
-        duration: 1,
-        ease: Power1.easeInOut,
-      }
+    const opacity = (opacity: number, duration=1, ease=Power1.easeInOut) => {
+      return { opacity, duration, ease, }
     }
+    tl.to(l1.value, opacity(1, 2), '+=2')
     const f1 = (what: gsap.TweenTarget, what_s: gsap.TweenTarget, position='+=2') => {
       tl.to(what, opacity(1)).to(what_s, {
         value: 1,
@@ -532,16 +529,17 @@ const timeline = (): gsap.core.Timeline => {
     tl.to( B1.value!, opacity(1))
     f1(penta.value!, penta_s)
     tl.to( B2.value!, opacity(1)).to( B3.value!, opacity(1), '<')
-    tl.to(square.value, opacity(0)).to(triangle.value, opacity(0), '<')
-    tl.to(circle_s, { value: 0, duration: 1,})
-    tl.to(reuleaux_s, { value: 0.45, duration: 1,}, '<')
-    tl.to(reuleaux_done_ref.value!, opacity(0), '<')
-    tl.to(penta_done_ref.value!, opacity(0), '<')
-    tl.to(A1.value, opacity(0),'<').to(A3.value, opacity(0), '<')
-    tl.to(l1.value, opacity(0), '+=2').to(A.value, opacity(0), '<')
-    tl.to(B.value, opacity(0), '<')
-    tl.to( C1.value!, opacity(1)).to(line_top.value!, opacity(1))
-    tl.to( C2.value!, opacity(1), '+=2.5')
+    .to(square.value, opacity(0)).to(triangle.value, opacity(0), '<')
+    .to(circle_s, { value: 0, duration: 1,})
+    .to(reuleaux_s, { value: 0.45, duration: 1,}, '<')
+    .to(reuleaux_done_ref.value!, opacity(0), '<')
+    .to(penta_done_ref.value!, opacity(0), '<')
+    .to(A1.value, opacity(0),'<').to(A3.value, opacity(0), '<')
+    .to(l1.value, opacity(0), '+=2').to(A.value, opacity(0), '<')
+    .to(B.value, opacity(0), '<')
+    .to( C1.value!, opacity(1)).to(line_top.value!, opacity(1))
+    .to( C2.value!, opacity(1), '+=2.5')
+    .to({}, { duration: 5 })
   }
   return tl
 }
@@ -561,7 +559,7 @@ defineExpose({ resizeListener })
 <template>
 <div ref="main" class="main">
   <div class="text">
-    <div ref="l1">Quelle est la distance parcourue en un tour ?</div>
+    <div ref="l1" class="hidden">Quelle est la distance parcourue en un tour&thinsp;?</div>
     <div ref="A">
       <span ref="A1" class="hidden square">Carré : 4</span>
       <span ref="A2" class="hidden">, </span>

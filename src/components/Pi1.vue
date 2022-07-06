@@ -35,6 +35,9 @@ const opacity = (opacity: number, duration = 2) => {
 }
 const timeline = (vars?: gsap.TimelineVars) => {
   const tl = gsap.timeline(vars)
+  tl.call(() => {
+    console.log('TIMELINE Pi1')
+  }, [], 1.5)
   for (let l of [l1, l2, l3]) {
     tl.to(l.value, opacity(1, 2), '+=0.5')
   }
@@ -92,12 +95,12 @@ const timeline = (vars?: gsap.TimelineVars) => {
     duration: 1,
   })
   for (let l of [l7, l8, l9]) {
-    tl.to(l.value, opacity(1, 2))
-    tl.to({}, {
-      duration: 0.5,
-    })
+    tl.to(l.value, opacity(1, 2), '+=1')
   }
-  return tl
+   tl.call(() => {
+    console.log('TIMELINE Pi1... DONE')
+  }, [], '+=1.5')
+ return tl
 }
 const $emit = defineEmits([
   'mounted'
@@ -120,8 +123,8 @@ onMounted(() => {
             <span class="greek colored">α</span> et <span class="greek colored">β</span> sont les deux premières lettres de l'alphabet grec.
           </div>
           <div>
-            <span class="hidden" ref="l2"><span class="greek">α</span> est lue «<span class="from" ref="from_alpha">alpha</span>», </span>
-            <span class="hidden" ref="l3"><span class="greek">β</span> est lue «<span class="from" ref="from_bet">bét</span>a»... </span>
+            <span class="hidden" ref="l2"><span class="greek colored">α</span> est lue «<span class="from" ref="from_alpha">alpha</span>», </span>
+            <span class="hidden" ref="l3"><span class="greek colored">β</span> est lue «<span class="from" ref="from_bet">bét</span>a»... </span>
             <span class="hidden" ref="l4"> d'où le mot <span class="to hidden" ref="to_alpha">alpha</span><span class="to hidden" ref="to_bet">bet</span></span>
             <span class="hidden absolute colored" ref="alpha">alpha</span><span class="hidden absolute colored" ref="bet">bet</span>
           </div>

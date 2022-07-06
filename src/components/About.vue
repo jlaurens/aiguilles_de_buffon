@@ -25,7 +25,7 @@ const timeline = (vars?: gsap.TimelineVars) => {
       duration: 1 + 4 * Math.random()
     }, 'Z+='+ (3 * Math.random()))
   }
-  tl.add(about.value!, {
+  tl.to(about.value!, {
     opacity: 0,
     duration: 2,
   }, '+=5')

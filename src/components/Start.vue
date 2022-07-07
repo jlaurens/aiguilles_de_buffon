@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { gsap, Power1 } from 'gsap';
 const props = defineProps({
   autoStart: {
@@ -37,10 +37,18 @@ onMounted(() => {
     $emit('mounted', timeline, 'Start')
   }
 })
+const style = computed(() => {
+  return {
+    background: 'url(./Georges-Louis_Leclerc_de_Buffon.jpg)',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'auto 100%',
+    backgroundColor: '#1A2014',
+  }
+})
 </script>
 
 <template>
-  <div ref="start" class="start">
+  <div ref="start" class="start" :style="style">
     <div class="center_h">
       <div class="center_v">
         <div ref="content" class="content">
@@ -56,7 +64,7 @@ onMounted(() => {
 
 <style scoped>
 .start {
-  background: url(Georges-Louis_Leclerc_de_Buffon.jpg) no-repeat;
+  background-repeat: no-repeat;
   background-size: auto 100%;
   background-color: #1A2014;
   height: 100%;

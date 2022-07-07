@@ -4,11 +4,12 @@ import vue from '@vitejs/plugin-vue'
 
 import * as path from 'path'
 
+const STATIC_ROOT = '/buffon/'
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.ELECTRON=="true" ? './' : "",
+  base: process.env.ELECTRON=="true" ? './' : STATIC_ROOT,
   build: {
-    outDir: '../buffon/docs',
+    outDir: './dist',
   },
   plugins: [vue()],
   css: {
@@ -29,12 +30,3 @@ export default defineConfig({
     }
   }
 })
-
-// export default defineConfig({
-//   plugins: [vue()],
-//   resolve: {
-//     alias: {
-//       path: "path-browserify",
-//     },
-//   },
-// })

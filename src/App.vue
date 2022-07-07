@@ -101,6 +101,7 @@ const switchPage = (name: string) => {
       trial.value?.show(true)
       trial.value?.run()
       progress.value = 0
+      goodColor.value = 'hsl('+Math.random()*360+',66%,50%)'
       break
     case 'Menu':
       currentTimeline?.kill()
@@ -252,8 +253,7 @@ const nextPage = (name: string) => {
   } [name] || 'Start'
 }
 let currentTimeline: gsap.core.Timeline | undefined
-//switchPage('Start')
-switchPage('Pi1')
+switchPage('Start')
 const registerTimeline = (tl: (vars?: gsap.TimelineVars) => gsap.core.Timeline, name: string) => {
   console.log('FROM', name, 'TO', nextPage(name))
   if (currentTimeline) {

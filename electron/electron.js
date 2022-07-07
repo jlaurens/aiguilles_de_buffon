@@ -14,6 +14,7 @@ function createWindow() {
     },
   });
   mainWindow.maximize();
+  mainWindow.setFullScreen(true);
   mainWindow.show();
 
   // and load the index.html of the app.
@@ -25,7 +26,10 @@ function createWindow() {
   );
   // Open the DevTools.
   if (isDev) {
-    mainWindow.webContents.openDevTools();
+    // mainWindow.loadURL('http://localhost:3000')
+    mainWindow.webContents.openDevTools()
+  } else {
+    // mainWindow.loadUrl(`file://${path.join(__dirname, '../dist/index.html')}`)
   }
 }
 

@@ -311,7 +311,6 @@ const timeline_place_numbers = (duration: number) => {
   var en: HTMLElement = n31.value!
   r = en.getBoundingClientRect()
   const t = (4 * r.bottom - 3 * r.top)+'px'
-  console.log('PLACE', t, l)
   en = n00.value!
   en.style.display = 'block'
   en.style.position = 'absolute'
@@ -374,7 +373,7 @@ const timeline_place_numbers = (duration: number) => {
     left: (l+32*w)+'px',
     duration: 0,
   })
-  tl.duration(60)
+  tl.duration(15)
   return tl
 }
 const timeline = () => {

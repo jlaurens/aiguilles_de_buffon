@@ -10,6 +10,10 @@ const props = defineProps({
     type: Number,
     default: 20,
   },
+  opacity: {
+    type: Number,
+    default: 1,
+  }
 })
 const w = ref(0), h = ref(0)
 const svgRoot = ref<SVGElement>()
@@ -290,18 +294,18 @@ defineExpose({ resizeListener })
 </script>
 
 <template>
-<Slide :z-index="zIndex">
-<div class="svg-container">
-<svg ref="svgRoot" version="1.1" :viewBox="viewBox" class="svg-content">
-<defs ref="svgDefs"></defs>
-<rect
-  :width="w"
-  :height="h"
-  fill="white" />
-</svg>
-</div>
-<slot></slot>
-</Slide>
+  <Slide :z-index="zIndex" :opacity="props.opacity">
+    <div class="svg-container">
+      <svg ref="svgRoot" version="1.1" :viewBox="viewBox" class="svg-content">
+        <defs ref="svgDefs"></defs>
+        <rect
+          :width="w"
+          :height="h"
+          fill="white" />
+      </svg>
+    </div>
+    <slot></slot>
+  </Slide>
 </template>
 
 <style scoped>

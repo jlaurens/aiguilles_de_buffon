@@ -9,7 +9,7 @@ const STATIC_ROOT = '/buffon/'
 export default defineConfig({
   base: process.env.ELECTRON=="true" ? './' : STATIC_ROOT,
   build: {
-    outDir: './dist',
+    outDir: 'dist',
   },
   plugins: [vue()],
   css: {

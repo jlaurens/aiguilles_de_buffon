@@ -2,9 +2,10 @@
   "name": "buffon",
   "private": true,
   "author": "Jérôme LAURENS",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "license": "EUPL-1.2",
   "main": "electron/electron.js",
+  "description": "Démonstration des aiguilles du Buffon",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -20,7 +21,14 @@
     "appId": "fr.u-bourgogne.aiguilles-de-buffon",
     "productName": "AiguillesDeBuffon",
     "copyright": "Copyright © 2022 ${author}",
+    "linux": {
+      "icon": "icons/icon.png"
+    },
+    "win": {
+      "icon": "icons/icon.ico"
+    },
     "mac": {
+      "icon": "icons/icon.icns",
       "category": "public.app-category.utilities",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,

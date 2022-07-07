@@ -281,10 +281,11 @@ const registerTimeline = (tl: (vars?: gsap.TimelineVars) => gsap.core.Timeline, 
   }
 }
 const progress = ref(0)
+const rainOpacity = ref(0)
 </script>
 <template>
   <Trial ref="trial" :color="goodColor"/>
-  <Rain ref='rain' :z-index='999' v-if="rainIsOn"/>
+  <Rain ref='rain' :z-index='999' v-if="rainIsOn" :opacity="rainOpacity"/>
   <Transition
     name='fade'
     mode="out-in"

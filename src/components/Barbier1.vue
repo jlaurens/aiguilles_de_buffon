@@ -591,7 +591,7 @@ const pnt_Ps = computed(() => {
       <div ref="l1" class="hidden">Une roue ronde tourne entre deux lignes parallèles fixes,</div>
       <div ref="l2" class="hidden">mais pas une roue carré,<span ref="l3" class="hidden"> ni une roue triangle,</span></div>
       <div ref="l4" class="hidden">à moins d'arrondir correctement les côtés.</div>
-      <div ref="l5" class="hidden">On peut augmenter le nombres de côtés...</div>
+      <div ref="l5" class="hidden">On peut augmenter le nombre de côtés...</div>
     </div>
     <div ref="B" class="none">
       <div ref="l6" class="hidden">Ces roues ont un <span class="emph">diamètre constant</span></div>

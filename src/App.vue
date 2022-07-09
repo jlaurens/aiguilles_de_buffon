@@ -54,6 +54,7 @@ const title_by_name = {
 const title_ref = ref<HTMLElement>()
 const title = ref(title_by_name['Start'])
 const goodColor = ref('hsl('+Math.random()*360+',66%,50%)')
+let trialDuration = 15
 const switchPage = (name: string) => {
   console.log('PAGE SWITCH', name)
   const qr = (name: string) => {
@@ -135,7 +136,18 @@ onMounted(()=>{
   document.addEventListener(
     "keyup",
     (e: KeyboardEvent) => {
-      if (e.key ==  "0") {
+      if (e.getModifierState('Control')) {
+        try {
+          const i = parseInt(e.key)
+          if (i) {
+            trialDuration = 15 * i
+          } else {
+            trialDuration = 15 * 4 * 3
+          }
+        } catch (error) {
+          trialDuration = 15
+        }
+      } else if (e.key ==  "0") {
         if (currentTimeline?.labels.Trial) {
           currentTimeline.seek('Trial')
           currentTimeline.resume()
@@ -261,14 +273,14 @@ const registerTimeline = (tl: (vars?: gsap.TimelineVars) => gsap.core.Timeline, 
   } else {
     currentTimeline = tl()
     if (!isPage('Start')) {
-      currentTimeline.call(() => {
+      currentTimeline.addLabel('Trial')
+      .call(() => {
         progress.value = 0
         console.log('WRAPPER DONE', name, 'Trial', progress.value)
         switchPage('Trial')
-      }, [], 'Trial')
-      .to(progress, {
+      }).to(progress, {
         value: 2 * Math.PI,
-        duration: 15,
+        duration: trialDuration,
       })
     }
     currentTimeline.call(() => {

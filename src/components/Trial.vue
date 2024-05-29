@@ -98,7 +98,7 @@ const throw_one_pin = (w: number, h: number, ctx?: CanvasRenderingContext2D) => 
   var ans = false
   var M = [
     Math.random()*w,
-    Math.random()*h, // beware the height is not free
+    Math.random()*2*half_pin_length*Math.ceil(h/half_pin_length/2), // beware the height is not free
   ];
   var theta = Math.PI*Math.random();
   var P_1: Point = [
@@ -130,6 +130,10 @@ const throw_one_pin = (w: number, h: number, ctx?: CanvasRenderingContext2D) => 
   }
   return ans
 }
+/*!
+  Throw pins on the canvas
+  @param j number of pins, defaults to `requested_count`
+*/
 const throw_pins = (j?: number) => {
   var jj = j || requested_count
   var w = getBackCanvas().width;
@@ -140,6 +144,7 @@ const throw_pins = (j?: number) => {
       if (pin_paquet<0) {
         return
       }
+      // we use a special canvas to draw on top
       swapCanvas();
       var ctx = getFrontCanvas().getContext("2d");
       ctx.clearRect(0, 0, w, h);
@@ -171,7 +176,7 @@ const throw_pins = (j?: number) => {
         }
         const ra: boolean[] = []
         var torf = true
-        ratio_ra.value.forEach((x, i) => {
+        ratio_ra.value.forEach((x: number, i: number) => {
           torf = torf && x == PI_ra[i]
           ra.push(torf)
         })

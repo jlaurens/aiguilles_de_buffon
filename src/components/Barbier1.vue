@@ -2,7 +2,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { gsap, Power1 } from 'gsap'
 import { Point, Angle } from '@mathigon/euclid'
-import { TweenLite } from 'gsap-trial/gsap-core';
 const props = defineProps({
   autoStart: {
     type: Boolean,

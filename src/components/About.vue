@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import { gsap } from 'gsap'
 import W from './bricks/W.vue'
 
-const about = ref<HTMLElement>()
+const help = ref<HTMLElement>()
 
 const props = defineProps({
   items: {
@@ -25,7 +25,7 @@ const timeline = (vars?: gsap.TimelineVars) => {
       duration: 1 + 4 * Math.random()
     }, 'Z+='+ (3 * Math.random()))
   }
-  tl.to(about.value!, {
+  tl.to(help.value!, {
     opacity: 0,
     duration: 2,
   }, '+=5')
@@ -41,7 +41,7 @@ onMounted(() => {
   if (props.autoStart) {
     timeline()
   } else {
-    $emit('mounted', timeline, 'About')
+    $emit('mounted', timeline, 'Help')
   }
   targets.length = 0
 })
@@ -55,7 +55,7 @@ const target = (t: () => any) => {
     <div class="center_h">
       <div class="center_v">
         <div class="content">
-          <div ref="A1"><W @target="target">Version 1 </W><W @target="target">© 2022 </W><W @target="target">Jérôme Laurens</W></div>
+          <div ref="A1"><W @target="target">Version 2 </W><W @target="target">© 2024 </W><W @target="target">Jérôme Laurens</W></div>
           <div><W @target ="target">Institut </W><W @target="target">de Mathématiques </W><W @target="target">de Bourgogne</W></div>
           <div><W @target="target">Unité Mixte </W><W @target="target">de Recherche </W><W @target="target">5584</W></div>
           <div><W @target="target">CNRS / Université </W><W @target="target">de Bourgogne</W></div>

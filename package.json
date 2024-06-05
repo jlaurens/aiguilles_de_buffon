@@ -20,7 +20,7 @@
   "build": {
     "appId": "fr.u-bourgogne.aiguilles-de-buffon",
     "productName": "AiguillesDeBuffon",
-    "copyright": "Copyright © 2022 ${author}",
+    "copyright": "Copyright © 2024 ${author}",
     "linux": {
       "icon": "icons/icon.png"
     },

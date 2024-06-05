@@ -23,6 +23,7 @@ import Barbier1 from './components/Barbier1.vue'
 import Barbier2 from './components/Barbier2.vue'
 import Trial from './components/Trial.vue'
 import About from './components/About.vue'
+import Help from './components/Help.vue'
 const mainStore = useMainStore()
 const rain = ref()
 const rainIsOn = ref(true)
@@ -34,12 +35,14 @@ const barbier1 = ref()
 const barbier2 = ref()
 const trial = ref()
 const about = ref()
+const help = ref()
 const menuIsOn = ref(true)
-const page = ref('')
+const helpIsOn = ref(true)
 const trialIsOn = ref(false)
 const qrIsOn = ref(false)
 const autoStart = ref(false)
-const names = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbier2', 'About']
+const page = ref('')
+const old_page = ref('')
 const title_by_name = {
   'Start': 'Commencer',
   'Game': 'Le jeux des aiguilles',
@@ -50,6 +53,7 @@ const title_by_name = {
   'Trial': 'Simulation de lancers',
   'About': 'À propos',
   'Menu': 'Les aiguilles de Buffon',
+  'Help': 'Aide',
 }
 const title_ref = ref<HTMLElement>()
 const title = ref(title_by_name['Start'])
@@ -86,7 +90,9 @@ const switchPage = (name: string) => {
       }
       title.value = title_by_name[name]
       page.value = name
+      old_page.value = name
       menuIsOn.value = false
+      helpIsOn.value = false
       qrIsOn.value = false
       rainIsOn.value = true
       trialIsOn.value = false
@@ -96,6 +102,7 @@ const switchPage = (name: string) => {
       title.value = title_by_name[name]
       page.value = name
       menuIsOn.value = false
+      helpIsOn.value = false
       rainIsOn.value = false
       qrIsOn.value = false
       trialIsOn.value = true
@@ -104,14 +111,29 @@ const switchPage = (name: string) => {
       progress.value = 0
       goodColor.value = 'hsl('+Math.random()*360+',66%,50%)'
       break
-    case 'Menu':
+      case 'Menu':
       currentTimeline?.kill()
       currentTimeline = undefined
       title.value = title_by_name[name]
       page.value = name
       menuIsOn.value = true
+      helpIsOn.value = false
       rainIsOn.value = true
       qrIsOn.value = false
+      trialIsOn.value = false
+      trial.value?.show(false)
+      break
+      case 'Help':
+      if (page.value != name) {
+        currentTimeline?.kill()
+        currentTimeline = undefined
+      }
+      title.value = title_by_name[name]
+      page.value = name
+      menuIsOn.value = false
+      helpIsOn.value = true
+      qrIsOn.value = false
+      rainIsOn.value = true
       trialIsOn.value = false
       trial.value?.show(false)
       break
@@ -120,6 +142,7 @@ const switchPage = (name: string) => {
       currentTimeline = undefined
       title.value = ''
       menuIsOn.value = false
+      helpIsOn.value = false
       rainIsOn.value = false
       qrIsOn.value = false
       trialIsOn.value = false
@@ -148,6 +171,7 @@ onMounted(()=>{
           trialDuration = 15
         }
       } else if (e.key ==  "0") {
+        switchPage('Trial')
         if (currentTimeline?.labels.Trial) {
           currentTimeline.seek('Trial')
           currentTimeline.resume()
@@ -175,6 +199,8 @@ onMounted(()=>{
         switchPage('Barbier2')
       } else if (e.key ==  "7") {
         switchPage('About')
+      } else if (e.key ==  "?") {
+        switchPage('Help')
       } else if (e.key ==  "+") {
         if (trialIsOn.value) {
           trial.value.accelerate()
@@ -197,6 +223,10 @@ onMounted(()=>{
         trial.value && trial.value.activate(false)
       } else if (e.key ==  " ") {
         currentTimeline?.paused( !currentTimeline?.paused() )
+      } else if (e.key == 'ArrowUp' || e.key == 'ArrowLeft') {
+        switchPage(previousPage(old_page.value))
+      } else if (e.key == 'ArrowDown' || e.key == 'ArrowRight') {
+        switchPage(nextPage(old_page.value))
       }
     },
     { signal: controller.signal }
@@ -253,6 +283,10 @@ const items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1'
   (k) => { return [k, title_by_name[k as key_t]] }
 ) as unknown as Array<[key_t, String]>
 
+const help_items: Array<[key_t, String]> = ['Start', 'Game', 'Pi1', 'Pi2', 'Barbier1', 'Barbier2', 'Trial', 'About'].map(
+  (k) => { return [k, title_by_name[k as key_t]] }
+) as unknown as Array<[key_t, String]>
+
 const nextPage = (name: string) => {
   return {
     Start: 'Game',
@@ -262,6 +296,17 @@ const nextPage = (name: string) => {
     Barbier1: 'Barbier2',
     Barbier2: 'About',
     About: 'Start',
+  } [name] || 'Start'
+}
+const previousPage = (name: string) => {
+  return {
+    Start: 'About',
+    Game: 'Start',
+    Pi1: 'Game',
+    Pi2: 'Pi1',
+    Barbier1: 'Pi2',
+    Barbier2: 'Barbier1',
+    About: 'Barbier2',
   } [name] || 'Start'
 }
 let currentTimeline: gsap.core.Timeline | undefined
@@ -314,6 +359,7 @@ const rainOpacity = ref(0)
         mode="out-in"
       >
         <Menu v-if="menuIsOn" @on-selected="switchPage" :items="items"></Menu>
+        <Help v-else-if="isPage('Help')" ref="help" :auto-start="autoStart" @mounted="registerTimeline"></Help>
         <Start v-else-if="isPage('Start')" ref="start" :auto-start="autoStart" @mounted="registerTimeline"></Start>
         <Game v-else-if="isPage('Game')" ref="game" :auto-start="autoStart" @mounted="registerTimeline"></Game>
         <Pi1 v-else-if="isPage('Pi1')" ref="pi1" :auto-start="autoStart" @mounted="registerTimeline"></Pi1>
@@ -329,6 +375,7 @@ const rainOpacity = ref(0)
     <Icon image="logo_IMB.png" @click="switchPage('IMB')" :size="height"/>
     <Icon image="logo-uB-filet.png" @click="switchPage('uB')" :size="height"/>
     <Icon image="logo_CNRS.png" @click="switchPage('CNRS')" :size="height"/>
+    <Icon image="help.png" @click="switchPage('Help')" :size="height"/>
   </Toolbar>
   <ProgressBar v-if="trialIsOn"
     ref="progress_bar"
